@@ -1,4 +1,3 @@
-// App.js
 const Search = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="11" cy="11" r="8"></circle>
@@ -37,8 +36,89 @@ function App() {
         </div>
       </header>
 
-      <main className="bg-white p-6">
-        {/* Your content goes here */}
+      {/* Stories Section */}
+      <div className="px-4 py-1">
+        <div className="flex gap-4 overflow-x-auto">
+          {/* My Story */}
+          <div className="flex flex-col items-center gap-1 flex-shrink-0">
+            <div className="relative">
+              <div className="w-16 h-16 rounded-full p-0.5" style={{background: 'linear-gradient(45deg, rgb(240, 148, 51) 0%, rgb(230, 104, 60) 25%, rgb(220, 39, 67) 50%, rgb(204, 35, 102) 75%, rgb(188, 24, 136) 100%)'}}>
+                <div className="w-full h-full rounded-full bg-white p-0.5">
+                  <div className="w-full h-full rounded-full bg-orange-500 flex items-center justify-center">
+                    <span className="text-white text-xl font-semibold">C</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span className="text-xs text-gray-800">My story</span>
+          </div>
+
+          {/* VaVia Story */}
+          <div className="flex flex-col items-center gap-1 flex-shrink-0">
+            <div className="relative">
+              <div className="w-16 h-16 rounded-full p-0.5" style={{background: 'linear-gradient(45deg, rgb(240, 148, 51) 0%, rgb(230, 104, 60) 25%, rgb(220, 39, 67) 50%, rgb(204, 35, 102) 75%, rgb(188, 24, 136) 100%)'}}>
+                <div className="w-full h-full rounded-full bg-white p-0.5">
+                  <div className="w-full h-full rounded-full bg-green-500 flex items-center justify-center">
+                    <span className="text-white text-xl font-semibold">V</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span className="text-xs text-gray-800">VaVia</span>
+          </div>
+        </div>
+      </div>
+
+      <main className="bg-white">
+        {/* Conversation List */}
+        <div className="divide-y divide-gray-100">
+          {/* Conversation Item 1 */}
+          <div className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer">
+            {/* Avatar */}
+            <div className="w-14 h-14 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+              <span className="text-white text-xl font-semibold">C</span>
+            </div>
+            
+            {/* Content */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="text-base font-semibold text-gray-900">Chizaram</h3>
+                <span className="text-sm text-gray-500">Wed</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-500 truncate flex-1">Yo! Chizaram's in</p>
+                {/* Unread Badge */}
+                <div className="w-6 h-6 rounded-full bg-blue-400 flex items-center justify-center flex-shrink-0 ml-2">
+                  <span className="text-white text-xs font-semibold">1</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Conversation Item 2 */}
+          <div className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer">
+            {/* Avatar */}
+            <div className="w-14 h-14 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+              <span className="text-white text-xl font-semibold">J</span>
+            </div>
+            
+            {/* Content */}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="text-base font-semibold text-gray-900">John</h3>
+                <span className="text-sm text-gray-500">Tue</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-500 truncate flex-1">See you tomorrow!</p>
+                {/* Double Check Mark */}
+                <svg className="w-5 h-5 text-blue-500 flex-shrink-0 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1 12l5 5L18 5"></path>
+                  <path d="M7 12l5 5L24 5"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   );
