@@ -1,4 +1,5 @@
-// App.js  –  everything in the global scope
+// App.js  –  No export, fully fixed FAB position
+
 const Search = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="11" cy="11" r="8"></circle>
@@ -22,11 +23,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden">
-      {/* ---------- Main list (slides left when a chat opens) ---------- */}
+      {/* ---------- Main List (slides left) – with pb-24 to reserve FAB space ---------- */}
       <div
         className={`transition-transform duration-300 ease-in-out ${
           selectedChat ? '-translate-x-full' : 'translate-x-0'
-        }`}
+        } pb-24`} // ← Critical: prevents FAB overlap
         style={{ width: '100%', height: '100%' }}
       >
         {/* Header */}
@@ -49,7 +50,7 @@ function App() {
           </div>
         </header>
 
-        {/* Stories */}
+        {/* Stories Section */}
         <div className="px-4 py-1">
           <div className="flex gap-4 overflow-x-auto">
             {/* My Story */}
@@ -58,8 +59,7 @@ function App() {
                 <div
                   className="w-16 h-16 rounded-full p-0.5"
                   style={{
-                    background:
-                      'linear-gradient(45deg, rgb(240,148,51) 0%, rgb(230,104,60) 25%, rgb(220,39,67) 50%, rgb(204,35,102) 75%, rgb(188,24,136) 100%)'
+                    background: 'linear-gradient(45deg, rgb(240,148,51) 0%, rgb(230,104,60) 25%, rgb(220,39,67) 50%, rgb(204,35,102) 75%, rgb(188,24,136) 100%)'
                   }}
                 >
                   <div className="w-full h-full rounded-full bg-white p-0.5">
@@ -78,8 +78,7 @@ function App() {
                 <div
                   className="w-16 h-16 rounded-full p-0.5"
                   style={{
-                    background:
-                      'linear-gradient(45deg, rgb(240,148,51) 0%, rgb(230,104,60) 25%, rgb(220,39,67) 50%, rgb(204,35,102) 75%, rgb(188,24,136) 100%)'
+                    background: 'linear-gradient(45deg, rgb(240,148,51) 0%, rgb(230,104,60) 25%, rgb(220,39,67) 50%, rgb(204,35,102) 75%, rgb(188,24,136) 100%)'
                   }}
                 >
                   <div className="w-full h-full rounded-full bg-white p-0.5">
@@ -94,7 +93,7 @@ function App() {
           </div>
         </div>
 
-        {/* Conversation list */}
+        {/* Conversation List */}
         <main className="bg-white">
           <div>
             {/* Chizaram */}
@@ -156,26 +155,26 @@ function App() {
             </div>
           </div>
         </main>
-
-        {/* FAB – bounces on click */}
-     <button
-     className="fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center text-white text-3xl font-light shadow-lg hover:shadow-xl transition-all duration-200 z-50"
-      style={{ backgroundColor: '#749cbf' }}
-     onClick={(e) => {
-    const btn = e.currentTarget;
-    btn.classList.remove('animate-bounce-once');
-    void btn.offsetWidth;
-    btn.classList.add('animate-bounce-once');
-  }}
->
-  +
-</button>
       </div>
 
-      {/* ---------- Chat screen (slides in from right) ---------- */}
+      {/* ---------- FAB – Always fixed, never moves ---------- */}
+      <button
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center text-white text-3xl font-light shadow-lg hover:shadow-xl transition-all duration-200 z-50"
+        style={{ backgroundColor: '#749cbf' }}
+        onClick={(e) => {
+          const btn = e.currentTarget;
+          btn.classList.remove('animate-bounce-once');
+          void btn.offsetWidth;
+          btn.classList.add('animate-bounce-once');
+        }}
+      >
+        +
+      </button>
+
+      {/* ---------- Chat Screen (slides in from right) ---------- */}
       {selectedChat && (
         <div
-          className="fixed inset-0 z-40"
+          className="fixed inset-0 z-40 bg-white"
           style={{
             transform: selectedChat ? 'translateX(0)' : 'translateX(100%)',
             transition: 'transform 0.3s ease-in-out'
@@ -188,7 +187,7 @@ function App() {
   );
 }
 
-/* ---- FAB bounce animation (global) ---- */
+/* ---- FAB Bounce Animation (global) ---- */
 const bounceStyle = document.createElement('style');
 bounceStyle.textContent = `
   @keyframes bounce-once {
