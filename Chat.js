@@ -3,14 +3,14 @@ function Chat({ username, onClose }) {
   return (
     <div className="fixed inset-0 bg-white z-50 flex flex-col animate-slide-in-right">
       {/* Header */}
-      <header className="flex items-center justify-between px-4 py-3 bg-[#075E54]">
+      <header className="flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200">
         <div className="flex items-center gap-3">
           <button
             onClick={onClose}
-            className="p-1 hover:bg-white/10 rounded-full transition-colors"
+            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
           >
             <svg
-              className="w-6 h-6 text-white"
+              className="w-6 h-6 text-gray-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -19,7 +19,7 @@ function Chat({ username, onClose }) {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M15 19l-7-7 7-7"
+                d="M10 19l-7-7m0 0l7-7m-7 7h18"
               />
             </svg>
           </button>
@@ -27,13 +27,13 @@ function Chat({ username, onClose }) {
             <span className="text-white text-xl font-medium">C</span>
           </div>
           <div>
-            <h1 className="text-white font-medium">{username}</h1>
-            <p className="text-white/80 text-xs">last seen Oct 15 at 06:54 PM</p>
+            <h1 className="text-gray-900 font-medium">{username}</h1>
+            <p className="text-gray-500 text-xs">last seen Oct 15 at 06:54 PM</p>
           </div>
         </div>
-        <button className="p-2 hover:bg-white/10 rounded-full transition-colors">
+        <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
           <svg
-            className="w-6 h-6 text-white"
+            className="w-6 h-6 text-gray-600"
             fill="currentColor"
             viewBox="0 0 24 24"
           >
