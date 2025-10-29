@@ -118,13 +118,35 @@ function App() {
         </div>
       </main>
 
-      {/* Floating Action Button (FAB) */}
+      {/* Floating Action Button with Bounce on Click */}
       <button
         className="fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center text-white text-3xl font-light shadow-lg hover:shadow-xl transition-all duration-200"
         style={{ backgroundColor: '#749cbf' }}
+        onClick={(e) => {
+          const btn = e.currentTarget;
+          btn.classList.remove('animate-bounce-once');
+          // Trigger reflow to restart animation
+          void btn.offsetWidth;
+          btn.classList.add('animate-bounce-once');
+        }}
       >
         +
       </button>
+
+      {/* Custom Bounce Animation */}
+      <style jsx>{`
+        @keyframes bounce-once {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-12px);
+          }
+        }
+        .animate-bounce-once {
+          animation: bounce-once 0.4s ease-in-out;
+        }
+      `}</style>
     </div>
   );
 }
