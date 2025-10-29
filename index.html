@@ -18,10 +18,11 @@
 <body class="bg-gray-50">
   <div id="root"></div>
 
-  <!-- Load ONLY App.js -->
+  <!-- Load the two component files -->
+  <script type="text/babel" src="Chat.js"></script>
   <script type="text/babel" src="App.js"></script>
 
-  <!-- Render App -->
+  <!-- Render the app -->
   <script type="text/babel">
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<App />);
