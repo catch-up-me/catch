@@ -1,4 +1,4 @@
-// App.js  –  No export, fully fixed FAB position
+// App.js – No export, FAB hides on chat open
 
 const Search = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -27,7 +27,7 @@ function App() {
       <div
         className={`transition-transform duration-300 ease-in-out ${
           selectedChat ? '-translate-x-full' : 'translate-x-0'
-        } pb-24`} // ← Critical: prevents FAB overlap
+        } pb-24`}
         style={{ width: '100%', height: '100%' }}
       >
         {/* Header */}
@@ -157,19 +157,21 @@ function App() {
         </main>
       </div>
 
-      {/* ---------- FAB – Always fixed, never moves ---------- */}
-      <button
-        className="fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center text-white text-3xl font-light shadow-lg hover:shadow-xl transition-all duration-200 z-50"
-        style={{ backgroundColor: '#749cbf' }}
-        onClick={(e) => {
-          const btn = e.currentTarget;
-          btn.classList.remove('animate-bounce-once');
-          void btn.offsetWidth;
-          btn.classList.add('animate-bounce-once');
-        }}
-      >
-        +
-      </button>
+      {/* ---------- FAB – ONLY VISIBLE WHEN NO CHAT IS OPEN ---------- */}
+      {!selectedChat && (
+        <button
+          className="fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center text-white text-3xl font-light shadow-lg hover:shadow-xl transition-all duration-200 z-50"
+          style={{ backgroundColor: '#749cbf' }}
+          onClick={(e) => {
+            const btn = e.currentTarget;
+            btn.classList.remove('animate-bounce-once');
+            void btn.offsetWidth;
+            btn.classList.add('animate-bounce-once');
+          }}
+        >
+          +
+        </button>
+      )}
 
       {/* ---------- Chat Screen (slides in from right) ---------- */}
       {selectedChat && (
