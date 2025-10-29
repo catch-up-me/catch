@@ -28,7 +28,7 @@ function SignUpForm() {
       justifyContent: 'center',
       alignItems: 'center',
       minHeight: '100vh',
-      padding: '20px'
+      padding: '20px',
       marginTop: '-30px'
     }}>
       <div style={{ background: '#f5f5f5', width: '100%', maxWidth: '380px' }}>
