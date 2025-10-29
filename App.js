@@ -15,7 +15,7 @@ const Menu = ({ className }) => (
 
 function App() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white relative">
       <header className="bg-white px-4 py-6 flex items-center justify-between">
         <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
           <svg className="w-6 h-6" viewBox="0 0 24 24" fill="#749cbf" stroke="#749cbf" strokeWidth="2">
@@ -70,16 +70,13 @@ function App() {
       </div>
 
       <main className="bg-white">
-        {/* Conversation List */}
-        <div className="divide-y divide-gray-100">
-          {/* Conversation Item 1 */}
+        {/* Conversation List - NO DIVIDER */}
+        <div>
+          {/* Conversation Item 1 - Chizaram */}
           <div className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer">
-            {/* Avatar */}
             <div className="w-14 h-14 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
               <span className="text-white text-xl font-semibold">C</span>
             </div>
-            
-            {/* Content */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-1">
                 <h3 className="text-base font-semibold text-gray-900">Chizaram</h3>
@@ -87,7 +84,6 @@ function App() {
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-sm text-gray-500 truncate flex-1">Yo! Chizaram's in</p>
-                {/* Unread Badge */}
                 <div className="w-6 h-6 rounded-full bg-blue-400 flex items-center justify-center flex-shrink-0 ml-2">
                   <span className="text-white text-xs font-semibold">1</span>
                 </div>
@@ -95,9 +91,8 @@ function App() {
             </div>
           </div>
 
-          {/* Conversation Item 2 */}
+          {/* Conversation Item 2 - John */}
           <div className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer">
-            {/* Avatar with Gradient Light Pink */}
             <div 
               className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0"
               style={{
@@ -106,8 +101,6 @@ function App() {
             >
               <span className="text-white text-xl font-semibold">J</span>
             </div>
-            
-            {/* Content */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between mb-1">
                 <h3 className="text-base font-semibold text-gray-900">John</h3>
@@ -115,7 +108,6 @@ function App() {
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-sm text-gray-500 truncate flex-1">See you tomorrow!</p>
-                {/* Double Check Mark in #a7acaf */}
                 <svg className="w-5 h-5 flex-shrink-0 ml-2" viewBox="0 0 24 24" fill="none" stroke="#a7acaf" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M1 12l5 5L18 5"></path>
                   <path d="M7 12l5 5L24 5"></path>
@@ -125,6 +117,14 @@ function App() {
           </div>
         </div>
       </main>
+
+      {/* Floating Action Button (FAB) */}
+      <button
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-full flex items-center justify-center text-white text-3xl font-light shadow-lg hover:shadow-xl transition-all duration-200"
+        style={{ backgroundColor: '#749cbf' }}
+      >
+        +
+      </button>
     </div>
   );
 }
