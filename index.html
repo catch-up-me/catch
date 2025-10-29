@@ -12,13 +12,19 @@
 <body>
     <div id="root"></div>
 
+    <!-- Load the SignUpForm component -->
+    <script type="text/babel" src="SignUpForm.js"></script>
+    
     <!-- Load the App component -->
     <script type="text/babel" src="App.js"></script>
 
-    <!-- Render the App -->
+    <!-- Render the App or SignUpForm -->
     <script type="text/babel">
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        // To show SignUpForm, use:
+        root.render(<SignUpForm />);
+        // To show App, use:
+        // root.render(<App />);
     </script>
 </body>
 </html>
