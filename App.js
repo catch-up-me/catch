@@ -41,10 +41,13 @@ function App() {
           <h1 className="text-xl font-medium text-gray-800">Message</h1>
 
           <div className="flex items-center gap-2">
+            {/* Search Button – normal hover */}
             <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
               <Search className="w-6 h-6 text-gray-600" />
             </button>
-            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+
+            {/* Hamburger Button – VISIBLY "HOVERED" BY DEFAULT */}
+            <button className="p-2 bg-gray-100 rounded-lg transition-colors hover:bg-gray-200">
               <Menu className="w-6 h-6 text-gray-600" />
             </button>
           </div>
