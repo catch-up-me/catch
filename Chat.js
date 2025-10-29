@@ -3,26 +3,45 @@ function Chat({ username, onClose }) {
   return (
     <div className="fixed inset-0 bg-white z-50 flex flex-col animate-slide-in-right">
       {/* Header */}
-      <header className="flex items-center gap-4 px-4 py-4 border-b border-gray-100">
-        <button
-          onClick={onClose}
-          className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-        >
+      <header className="flex items-center justify-between px-4 py-3 bg-[#075E54]">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={onClose}
+            className="p-1 hover:bg-white/10 rounded-full transition-colors"
+          >
+            <svg
+              className="w-6 h-6 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+          <div className="w-10 h-10 rounded-full bg-[#7CB342] flex items-center justify-center">
+            <span className="text-white text-xl font-medium">C</span>
+          </div>
+          <div>
+            <h1 className="text-white font-medium">{username}</h1>
+            <p className="text-white/80 text-xs">last seen Oct 15 at 06:54 PM</p>
+          </div>
+        </div>
+        <button className="p-2 hover:bg-white/10 rounded-full transition-colors">
           <svg
-            className="w-5 h-5 text-gray-700"
-            fill="none"
-            stroke="currentColor"
+            className="w-6 h-6 text-white"
+            fill="currentColor"
             viewBox="0 0 24 24"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
+            <circle cx="12" cy="5" r="2" />
+            <circle cx="12" cy="12" r="2" />
+            <circle cx="12" cy="19" r="2" />
           </svg>
         </button>
-        <h1 className="text-lg font-semibold text-gray-900">{username}</h1>
       </header>
 
       {/* Empty body – messages will go here later */}
