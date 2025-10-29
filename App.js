@@ -97,8 +97,13 @@ function App() {
 
           {/* Conversation Item 2 */}
           <div className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer">
-            {/* Avatar */}
-            <div className="w-14 h-14 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+            {/* Avatar with Gradient Light Pink */}
+            <div 
+              className="w-14 h-14 rounded-full flex items-center justify-center flex-shrink-0"
+              style={{
+                background: 'linear-gradient(135deg, #ffb6c1 0%, #ff69b4 100%)'
+              }}
+            >
               <span className="text-white text-xl font-semibold">J</span>
             </div>
             
@@ -110,8 +115,8 @@ function App() {
               </div>
               <div className="flex items-center justify-between">
                 <p className="text-sm text-gray-500 truncate flex-1">See you tomorrow!</p>
-                {/* Double Check Mark */}
-                <svg className="w-5 h-5 text-blue-500 flex-shrink-0 ml-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                {/* Double Check Mark in #a7acaf */}
+                <svg className="w-5 h-5 flex-shrink-0 ml-2" viewBox="0 0 24 24" fill="none" stroke="#a7acaf" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M1 12l5 5L18 5"></path>
                   <path d="M7 12l5 5L24 5"></path>
                 </svg>
