@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign Up – Message App</title>
+  <title>Sign Up</title>
 
-  <!-- React -->
+  <!-- React 18 -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 
-  <!-- Babel (for JSX) -->
+  <!-- Babel -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <!-- Tailwind -->
@@ -18,10 +18,10 @@
 <body class="bg-gray-50">
   <div id="root"></div>
 
-  <!-- Load the component -->
+  <!-- Load ONLY SignUpForm.js -->
   <script type="text/babel" src="SignUpForm.js"></script>
 
-  <!-- Render it -->
+  <!-- Render SignUpForm -->
   <script type="text/babel">
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<SignUpForm />);
