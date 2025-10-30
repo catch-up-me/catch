@@ -2,10 +2,10 @@
 function Chat({ username, onClose }) {
   return (
     <div className="fixed inset-0 bg-white z-50 flex flex-col animate-slide-in-right">
-      {/* Header – strong bottom shadow, no border */}
-      <header className="relative flex items-center justify-between px-4 py-3 bg-white shadow-2xl">
-        {/* Transparent spacer to let the shadow bleed below */}
-        <div className="absolute inset-x-0 bottom-0 h-4 bg-transparent -z-10 pointer-events-none"></div>
+      {/* Header – very small bottom shadow, no border */}
+      <header className="relative flex items-center justify-between px-4 py-3 bg-white shadow-xs">
+        {/* Tiny transparent spacer to allow shadow to show */}
+        <div className="absolute inset-x-0 bottom-0 h-1 bg-transparent -z-10 pointer-events-none"></div>
 
         <div className="flex items-center gap-3">
           <button
@@ -56,7 +56,7 @@ function Chat({ username, onClose }) {
   );
 }
 
-/* ---- slide-in / slide-out animations ---- */
+/* ---- slide-in / slide-out animations + custom shadow ---- */
 const chatStyle = document.createElement('style');
 chatStyle.textContent = `
   @keyframes slide-in-right {
@@ -72,6 +72,11 @@ chatStyle.textContent = `
   }
   .animate-slide-out-right {
     animation: slide-out-right 0.3s ease-in forwards;
+  }
+
+  /* Very small, subtle shadow */
+  .shadow-xs {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
   }
 `;
 document.head.appendChild(chatStyle);
