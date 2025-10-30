@@ -1,9 +1,12 @@
-// Chat.js  –  global Chat component
+// Chat.js – global Chat component
 function Chat({ username, onClose }) {
   return (
     <div className="fixed inset-0 bg-white z-50 flex flex-col animate-slide-in-right">
-      {/* Header with bottom shadow */}
-      <header className="flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200 shadow-sm">
+      {/* Header – strong bottom shadow, no border */}
+      <header className="relative flex items-center justify-between px-4 py-3 bg-white shadow-2xl">
+        {/* Transparent spacer to let the shadow bleed below */}
+        <div className="absolute inset-x-0 bottom-0 h-4 bg-transparent -z-10 pointer-events-none"></div>
+
         <div className="flex items-center gap-3">
           <button
             onClick={onClose}
@@ -23,14 +26,17 @@ function Chat({ username, onClose }) {
               />
             </svg>
           </button>
+
           <div className="w-10 h-10 rounded-full bg-[#7CB342] flex items-center justify-center">
             <span className="text-white text-xl font-medium">C</span>
           </div>
+
           <div>
             <h1 className="text-gray-900 font-medium">{username}</h1>
             <p className="text-gray-500 text-xs">last seen Oct 15 at 06:54 PM</p>
           </div>
         </div>
+
         <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
           <svg
             className="w-6 h-6 text-gray-600"
@@ -68,4 +74,4 @@ chatStyle.textContent = `
     animation: slide-out-right 0.3s ease-in forwards;
   }
 `;
-document.head.appendChild(chatStyle);;
+document.head.appendChild(chatStyle);
