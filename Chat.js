@@ -79,4 +79,4 @@ chatStyle.textContent = `
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
   }
 `;
-document.head.appendChild(chatStyle);
+document.head.appendChild(chatStyle);;
