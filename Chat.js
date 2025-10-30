@@ -2,8 +2,8 @@
 function Chat({ username, onClose }) {
   return (
     <div className="fixed inset-0 bg-white z-50 flex flex-col animate-slide-in-right">
-      {/* Header */}
-      <header className="flex items-center justify-between px-4 py-3 bg-white shadow-sm">
+      {/* Header with bottom shadow */}
+      <header className="flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200 shadow-sm">
         <div className="flex items-center gap-3">
           <button
             onClick={onClose}
@@ -68,4 +68,4 @@ chatStyle.textContent = `
     animation: slide-out-right 0.3s ease-in forwards;
   }
 `;
-document.head.appendChild(chatStyle);
+document.head.appendChild(chatStyle);;
