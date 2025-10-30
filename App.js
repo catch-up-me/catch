@@ -169,58 +169,66 @@ function MessagingHeader() {
           ))}
         </div>
 
-        {/* Conversation List – Divider: Left stops after avatar, Right goes to edge */}
-        <div className="relative">
-          {conversations.map((conv, idx) => (
-            <div
-              key={conv.id}
-              onClick={() => handleConversationClick(conv)}
-              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors relative"
-            >
-              {/* Avatar */}
-              <div className={`w-12 h-12 rounded-full ${conv.avatarColor} flex items-center justify-center text-white text-xl font-semibold flex-shrink-0`}>
-                {conv.avatar}
-              </div>
+        {/* Content Area */}
+        {activeTab === 'messages' ? (
+          <div className="relative">
+            {conversations.map((conv, idx) => (
+              <div
+                key={conv.id}
+                onClick={() => handleConversationClick(conv)}
+                className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors relative"
+              >
+                {/* Avatar */}
+                <div className={`w-12 h-12 rounded-full ${conv.avatarColor} flex items-center justify-center text-white text-xl font-semibold flex-shrink-0`}>
+                  {conv.avatar}
+                </div>
 
-              {/* Message Content */}
-              <div className="flex-1 min-w-0">
-                <h3 className="text-base font-semibold text-gray-900">
-                  {conv.name}
-                </h3>
-                <p className="text-sm text-gray-400 truncate">
-                  {conv.message}
-                </p>
-              </div>
+                {/* Message Content */}
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-base font-semibold text-gray-900">
+                    {conv.name}
+                  </h3>
+                  <p className="text-sm text-gray-400 truncate">
+                    {conv.message}
+                  </p>
+                </div>
 
-              {/* Right Side - Day and Badge */}
-              <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                <span className="text-gray-400 text-xs">
-                  {conv.day}
-                </span>
-                {conv.unread > 0 ? (
-                  <div className="w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium" style={{ backgroundColor: '#749cbf' }}>
-                    {conv.unread}
-                  </div>
-                ) : conv.read ? (
-                  <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="none" className="w-4 h-4">
-                    <path stroke="#535358" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 17l5 5 12-12M16 20l2 2 12-12"></path>
-                  </svg>
-                ) : null}
-              </div>
+                {/* Right Side - Day and Badge */}
+                <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                  <span className="text-gray-400 text-xs">
+                    {conv.day}
+                  </span>
+                  {conv.unread > 0 ? (
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium" style={{ backgroundColor: '#749cbf' }}>
+                      {conv.unread}
+                    </div>
+                  ) : conv.read ? (
+                    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="none" className="w-4 h-4">
+                      <path stroke="#535358" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 17l5 5 12-12M16 20l2 2 12-12"></path>
+                    </svg>
+                  ) : null}
+                </div>
 
-              {/* Custom Divider: Starts after avatar, ends at right edge */}
-              {idx < conversations.length - 1 && (
-                <div
-                  className="absolute bottom-0 h-px bg-gray-200"
-                  style={{
-                    left: '4rem',   // px-4 (16px) + w-12 (48px) + gap-3 (12px) ≈ 4rem
-                    right: 0,       // extends to the far right edge
-                  }}
-                />
-              )}
-            </div>
-          ))}
-        </div>
+                {/* Custom Divider: Starts after avatar, ends at right edge */}
+                {idx < conversations.length - 1 && (
+                  <div
+                    className="absolute bottom-0 h-px bg-gray-200"
+                    style={{
+                      left: '4rem',
+                      right: 0,
+                    }}
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        ) : activeTab === 'stories' ? (
+          <div className="flex items-center justify-center py-20 px-4">
+            <p className="text-gray-400 text-center">
+              When your friends post stories, they'll appear here
+            </p>
+          </div>
+        ) : null}
       </div>
 
       {/* Chat Component */}
