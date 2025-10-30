@@ -169,13 +169,13 @@ function MessagingHeader() {
           ))}
         </div>
 
-        {/* Conversation List */}
-        <div className="divide-y divide-gray-200">
-          {conversations.map((conv) => (
+        {/* Conversation List – Custom divider that stops before day/badge */}
+        <div className="relative">
+          {conversations.map((conv, idx) => (
             <div
               key={conv.id}
               onClick={() => handleConversationClick(conv)}
-              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors"
+              className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors relative"
             >
               {/* Avatar */}
               <div className={`w-12 h-12 rounded-full ${conv.avatarColor} flex items-center justify-center text-white text-xl font-semibold flex-shrink-0`}>
@@ -207,6 +207,17 @@ function MessagingHeader() {
                   </svg>
                 ) : null}
               </div>
+
+              {/* Custom Divider Line – stops before day/badge */}
+              {idx < conversations.length - 1 && (
+                <div
+                  className="absolute bottom-0 h-px bg-gray-200"
+                  style={{
+                    left: '4rem',  // 16px (px-4) + 12px avatar + 12px gap = ~4rem
+                    right: '4rem', // Stop before right column (px-4)
+                  }}
+                />
+              )}
             </div>
           ))}
         </div>
