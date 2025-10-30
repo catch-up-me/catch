@@ -169,7 +169,7 @@ function MessagingHeader() {
           ))}
         </div>
 
-        {/* Conversation List – Custom divider that stops before day/badge */}
+        {/* Conversation List – Divider: Left stops after avatar, Right goes to edge */}
         <div className="relative">
           {conversations.map((conv, idx) => (
             <div
@@ -208,13 +208,13 @@ function MessagingHeader() {
                 ) : null}
               </div>
 
-              {/* Custom Divider Line – stops before day/badge */}
+              {/* Custom Divider: Starts after avatar, ends at right edge */}
               {idx < conversations.length - 1 && (
                 <div
                   className="absolute bottom-0 h-px bg-gray-200"
                   style={{
-                    left: '4rem',  // 16px (px-4) + 12px avatar + 12px gap = ~4rem
-                    right: '4rem', // Stop before right column (px-4)
+                    left: '4rem',   // px-4 (16px) + w-12 (48px) + gap-3 (12px) ≈ 4rem
+                    right: 0,       // extends to the far right edge
                   }}
                 />
               )}
