@@ -75,8 +75,9 @@ chatStyle.textContent = `
   }
 
   /* Very small, subtle shadow */
-  .shadow-xs {
-    box-shadow: -6px 2px 1px rgba(0, 0, 0, 0.05);
+  
+.shadow-xs {
+    box-shadow: -14px 1px 14px 5px rgba(0, 0, 0, 0.05);
 }
 `;
 document.head.appendChild(chatStyle);
