@@ -121,7 +121,7 @@ function App() {
               </div>
             </div>
 
-            {/* John */}
+            {/* John – Updated with new double-checkmark SVG */}
             <div
               className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer"
               onClick={() => openChat('John')}
@@ -143,15 +143,17 @@ function App() {
                   <p className="text-sm text-gray-500 truncate flex-1">See you tomorrow!</p>
                   <svg
                     className="w-5 h-5 flex-shrink-0 ml-2"
-                    viewBox="0 0 24 24"
+                    viewBox="0 0 32 32"
+                    xmlns="http://www.w3.org/2000/svg"
                     fill="none"
-                    stroke="#a7acaf"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
                   >
-                    <path d="M1 12l5 5L18 5"></path>
-                    <path d="M7 12l5 5L24 5"></path>
+                    <path
+                      stroke="#535358"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4 17l5 5 12-12M16 20l2 2 12-12"
+                    />
                   </svg>
                 </div>
               </div>
