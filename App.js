@@ -1,4 +1,3 @@
-<script type="text/babel">
 const { useState } = React;
 
 // Lucide Search Icon Component
@@ -275,4 +274,4 @@ document.head.appendChild(chatStyle);
 // Render the app
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<MessagingHeader />);
-  </script>
+
