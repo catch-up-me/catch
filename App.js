@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom/client';
+const { useState } = React;
 
 // Lucide Search Icon Component
 const Search = ({ className }) => (
@@ -35,6 +34,7 @@ function Chat({ conversation, onClose }) {
     <div className={`fixed inset-0 bg-white z-50 flex flex-col ${isClosing ? 'animate-slide-out-right' : 'animate-slide-in-right'}`}>
       {/* Header – very small bottom shadow, no border */}
       <header className="relative flex items-center justify-between px-4 py-3 bg-white shadow-xs">
+        {/* Tiny transparent spacer to allow shadow to show */}
         <div className="absolute inset-x-0 bottom-0 h-1 bg-transparent -z-10 pointer-events-none"></div>
 
         <div className="flex items-center gap-3">
@@ -80,6 +80,7 @@ function Chat({ conversation, onClose }) {
         </button>
       </header>
 
+      {/* Empty body – messages will go here later */}
       <main className="flex-1 bg-white"></main>
     </div>
   );
@@ -126,18 +127,16 @@ function MessagingHeader() {
 
   return (
     <>
-      <div className={`w-full max-w-md mx-auto bg-white relative transition-transform duration-300 ${openChat ? 'animate-push-left' : ''}`}>
-        {/* Floating Action Button - Fixed, No Push, Hardware Accelerated */}
-        <button
-          className={`fixed right-6 bottom-6 w-14 h-14 rounded-full text-white text-3xl font-light flex items-center justify-center shadow-lg hover:shadow-xl transition-all active:scale-90 active:shadow-md z-40 translate-z-0 ${
-            openChat ? 'opacity-0 pointer-events-none' : 'opacity-100'
-          }`}
-          style={{ backgroundColor: '#749cbf' }}
-          aria-label="Add new"
-        >
-          +
-        </button>
+      {/* Floating Action Button - Outside animated container */}
+      <button
+        className={`fixed right-6 bottom-6 w-14 h-14 rounded-full text-white text-3xl font-light flex items-center justify-center shadow-lg hover:shadow-xl transition-all active:scale-90 active:shadow-md z-40 ${openChat ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+        style={{ backgroundColor: '#749cbf' }}
+        aria-label="Add new"
+      >
+        +
+      </button>
 
+      <div className={`w-full max-w-md mx-auto bg-white relative transition-transform duration-300 ${openChat ? 'animate-push-left' : ''}`}>
         {/* Search Bar */}
         <div className="px-4 py-3 border-b border-gray-200">
           <div className="flex items-center gap-3 bg-gray-100 rounded-full px-4 py-2">
@@ -179,17 +178,26 @@ function MessagingHeader() {
                 onClick={() => handleConversationClick(conv)}
                 className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors relative"
               >
+                {/* Avatar */}
                 <div className={`w-12 h-12 rounded-full ${conv.avatarColor} flex items-center justify-center text-white text-xl font-semibold flex-shrink-0`}>
                   {conv.avatar}
                 </div>
 
+                {/* Message Content */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-base font-semibold text-gray-900">{conv.name}</h3>
-                  <p className="text-sm text-gray-400 truncate">{conv.message}</p>
+                  <h3 className="text-base font-semibold text-gray-900">
+                    {conv.name}
+                  </h3>
+                  <p className="text-sm text-gray-400 truncate">
+                    {conv.message}
+                  </p>
                 </div>
 
+                {/* Right Side - Day and Badge */}
                 <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                  <span className="text-gray-400 text-xs">{conv.day}</span>
+                  <span className="text-gray-400 text-xs">
+                    {conv.day}
+                  </span>
                   {conv.unread > 0 ? (
                     <div className="w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium" style={{ backgroundColor: '#749cbf' }}>
                       {conv.unread}
@@ -201,10 +209,14 @@ function MessagingHeader() {
                   ) : null}
                 </div>
 
+                {/* Custom Divider: Starts after avatar, ends at right edge */}
                 {idx < conversations.length - 1 && (
                   <div
                     className="absolute bottom-0 h-px bg-gray-200"
-                    style={{ left: '4rem', right: 0 }}
+                    style={{
+                      left: '4rem',
+                      right: 0,
+                    }}
                   />
                 )}
               </div>
@@ -219,14 +231,17 @@ function MessagingHeader() {
         ) : null}
       </div>
 
-      {openChat && <Chat conversation={openChat} onClose={handleCloseChat} />}
+      {/* Chat Component */}
+      {openChat && (
+        <Chat conversation={openChat} onClose={handleCloseChat} />
+      )}
     </>
   );
 }
 
-// Add custom styles
-const style = document.createElement('style');
-style.textContent = `
+// Add custom styles for animations
+const chatStyle = document.createElement('style');
+chatStyle.textContent = `
   @keyframes slide-in-right {
     from { transform: translateX(100%); }
     to   { transform: translateX(0); }
@@ -249,19 +264,13 @@ style.textContent = `
     animation: push-left 0.3s ease-out forwards;
   }
 
-  /* Prevent FAB from shifting - force GPU layer */
-  .translate-z-0 {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-  }
-
-  /* Subtle bottom shadow */
+  /* Very small, subtle shadow */
   .shadow-xs {
-    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: -14px 1px 14px 5px rgba(0, 0, 0, 0.05);
   }
 `;
-document.head.appendChild(style);
+document.head.appendChild(chatStyle);
 
-// Render
+// Render the app
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<MessagingHeader />);
