@@ -1,4 +1,5 @@
-const { useState } = React;
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom/client';
 
 // Lucide Search Icon Component
 const Search = ({ className }) => (
@@ -130,7 +131,7 @@ function MessagingHeader() {
       <div className={`w-full max-w-md mx-auto bg-white relative transition-transform duration-300 ${openChat ? 'animate-push-left' : ''}`}>
         {/* Floating Action Button */}
         <button
-          className={`fixed right-6 bottom-6 w-14 h-14 rounded-full text-white text-3xl font-light flex items-center justify-center shadow-lg hover:shadow-xl transition-all active:scale-90 active:shadow-md z-40 ${openChat ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+          className={`fixed right-6 bottom-6 w-14 h-14 rounded-full text-white text-3xl font-light flex items-center justify-center shadow-lg hover:shadow-xl transition-all active:scale-90 active:shadow-md z-40 translate-z-0 ${openChat ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
           style={{ backgroundColor: '#749cbf' }}
           aria-label="Add new"
         >
@@ -240,8 +241,8 @@ function MessagingHeader() {
 }
 
 // Add custom styles for animations
-const chatStyle = document.createElement('style');
-chatStyle.textContent = `
+const style = document.createElement('style');
+style.textContent = `
   @keyframes slide-in-right {
     from { transform: translateX(100%); }
     to   { transform: translateX(0); }
@@ -264,14 +265,18 @@ chatStyle.textContent = `
     animation: push-left 0.3s ease-out forwards;
   }
 
-  /* Very small, subtle shadow */
+  /* Force hardware acceleration on FAB to prevent any layout shift */
+  .translate-z-0 {
+    transform: translateZ(0);
+  }
+
+  /* Very small, subtle bottom-only shadow */
   .shadow-xs {
-    box-shadow: -14px 1px 14px 5px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
   }
 `;
-document.head.appendChild(chatStyle);
+document.head.appendChild(style);
 
 // Render the app
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<MessagingHeader />);
-
