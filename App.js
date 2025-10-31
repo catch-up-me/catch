@@ -160,11 +160,31 @@ function MessagingHeader() {
     <>
       {/* Floating Action Button - Outside animated container */}
       <button
-        className={`fixed right-6 bottom-6 w-14 h-14 rounded-full text-white text-3xl font-light flex items-center justify-center shadow-lg hover:shadow-xl transition-all active:scale-90 active:shadow-md z-40 ${openChat ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+        className={`fixed right-6 bottom-6 w-14 h-14 rounded-full text-white flex items-center justify-center shadow-lg hover:shadow-xl transition-all active:scale-90 active:shadow-md z-40 ${openChat ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         style={{ backgroundColor: '#749cbf' }}
-        aria-label="Add new"
+        aria-label={activeTab === 'calls' ? 'Start new call' : 'Add new'}
       >
-        +
+        {activeTab === 'calls' ? (
+          <svg
+            className="w-7 h-7"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+            />
+            <line x1="18" y1="6" x2="18" y2="6" strokeWidth={2} strokeLinecap="round" />
+            <line x1="15" y1="6" x2="21" y2="6" strokeWidth={2} strokeLinecap="round" />
+            <line x1="18" y1="3" x2="18" y2="9" strokeWidth={2} strokeLinecap="round" />
+          </svg>
+        ) : (
+          <span className="text-3xl font-light">+</span>
+        )}
       </button>
 
       <div className={`w-full max-w-md mx-auto bg-white relative transition-transform duration-300 ${openChat ? 'animate-push-left' : ''}`}>
@@ -305,10 +325,35 @@ function MessagingHeader() {
             ))}
           </div>
         ) : activeTab === 'calls' ? (
-          <div className="flex items-center justify-center py-20 px-4">
-            <p className="text-gray-400 text-center">
-              All Calls will appear here
-            </p>
+          <div className="p-4">
+            {/* Start New Call Header */}
+            <div className="flex items-center gap-3 mb-3">
+              <svg
+                className="w-8 h-8 text-blue-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                />
+                <line x1="18" y1="6" x2="18" y2="6" strokeWidth={1.5} strokeLinecap="round" />
+                <line x1="15" y1="6" x2="21" y2="6" strokeWidth={1.5} strokeLinecap="round" />
+                <line x1="18" y1="3" x2="18" y2="9" strokeWidth={1.5} strokeLinecap="round" />
+              </svg>
+              <h2 className="text-lg font-normal text-blue-500">Start New Call</h2>
+            </div>
+
+            {/* Description */}
+            <div className="bg-gray-50 rounded px-4 py-3">
+              <p className="text-gray-500 text-sm">
+                You can add up to 200 participants to a call.
+              </p>
+            </div>
           </div>
         ) : null}
       </div>
