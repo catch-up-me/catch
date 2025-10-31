@@ -57,8 +57,18 @@ function Chat({ conversation, onClose }) {
             </svg>
           </button>
 
-          <div className={`w-10 h-10 rounded-full ${conversation.avatarColor} flex items-center justify-center`}>
-            <span className="text-white text-xl font-medium">{conversation.avatar}</span>
+          <div className={`w-10 h-10 rounded-full ${conversation.avatarColor} flex items-center justify-center overflow-hidden`}>
+            {conversation.isText ? (
+              <span className="text-white text-xl font-medium">{conversation.avatar}</span>
+            ) : (
+              <img 
+                src={conversation.avatarImage} 
+                alt={conversation.name}
+                className="w-full h-full object-cover"
+                onContextMenu={(e) => e.preventDefault()}
+                draggable="false"
+              />
+            )}
           </div>
 
           <div>
@@ -92,8 +102,27 @@ function MessagingHeader() {
 
   const tabs = [
     { id: 'messages', label: 'MESSAGES' },
-    { id: 'stories', label: 'STORIES' },
+    { id: 'calls', label: 'CALLS' },
     { id: 'settings', label: 'SETTINGS' }
+  ];
+
+  const stories = [
+    {
+      id: 's1',
+      name: 'My story',
+      avatar: 'M',
+      avatarColor: 'bg-orange-500',
+      hasStory: true,
+      isText: true
+    },
+    {
+      id: 's2',
+      name: 'VaVia',
+      avatarImage: 'https://i.ibb.co/C5b875C6/Screenshot-20250904-050841.jpg',
+      avatarColor: 'bg-purple-500',
+      hasStory: true,
+      isText: false
+    }
   ];
 
   const conversations = [
@@ -104,16 +133,18 @@ function MessagingHeader() {
       avatar: 'C',
       avatarColor: 'bg-green-500',
       day: 'Wed',
-      unread: 1
+      unread: 1,
+      isText: true
     },
     {
       id: 2,
       name: 'VaVia',
       message: 'Hey, how are you doing?',
-      avatar: 'V',
+      avatarImage: 'https://i.ibb.co/C5b875C6/Screenshot-20250904-050841.jpg',
       avatarColor: 'bg-purple-500',
       day: 'Tue',
-      read: true
+      read: true,
+      isText: false
     }
   ];
 
@@ -129,11 +160,31 @@ function MessagingHeader() {
     <>
       {/* Floating Action Button - Outside animated container */}
       <button
-        className={`fixed right-6 bottom-6 w-14 h-14 rounded-full text-white text-3xl font-light flex items-center justify-center shadow-lg hover:shadow-xl transition-all active:scale-90 active:shadow-md z-40 ${openChat ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+        className={`fixed right-6 bottom-6 w-14 h-14 rounded-full text-white flex items-center justify-center shadow-lg hover:shadow-xl transition-all active:scale-90 active:shadow-md z-40 ${openChat ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         style={{ backgroundColor: '#749cbf' }}
-        aria-label="Add new"
+        aria-label={activeTab === 'calls' ? 'Start new call' : 'Add new'}
       >
-        +
+        {activeTab === 'calls' ? (
+          <svg
+            className="w-7 h-7"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+            />
+            <line x1="18" y1="6" x2="18" y2="6" strokeWidth={2} strokeLinecap="round" />
+            <line x1="15" y1="6" x2="21" y2="6" strokeWidth={2} strokeLinecap="round" />
+            <line x1="18" y1="3" x2="18" y2="9" strokeWidth={2} strokeLinecap="round" />
+          </svg>
+        ) : (
+          <span className="text-3xl font-light">+</span>
+        )}
       </button>
 
       <div className={`w-full max-w-md mx-auto bg-white relative transition-transform duration-300 ${openChat ? 'animate-push-left' : ''}`}>
@@ -172,6 +223,47 @@ function MessagingHeader() {
         {/* Content Area */}
         {activeTab === 'messages' ? (
           <div className="relative">
+            {/* Stories Section */}
+            <div className="px-4 py-3 border-b border-gray-200">
+              <div className="flex gap-4 overflow-x-auto">
+                {stories.map((story) => (
+                  <div key={story.id} className="flex flex-col items-center gap-1 flex-shrink-0">
+                    <div className="relative">
+                      <div 
+                        className="p-0.5 rounded-full"
+                        style={{
+                          background: story.hasStory 
+                            ? 'linear-gradient(45deg, rgb(240, 148, 51) 0%, rgb(230, 104, 60) 25%, rgb(220, 39, 67) 50%, rgb(204, 35, 102) 75%, rgb(188, 24, 136) 100%)'
+                            : 'transparent'
+                        }}
+                      >
+                        <div className={`w-14 h-14 rounded-full ${story.avatarColor} flex items-center justify-center text-white text-lg font-semibold ${story.hasStory ? 'border-2 border-white' : ''} overflow-hidden`}>
+                          {story.isText ? (
+                            story.avatar
+                          ) : (
+                            <img 
+                              src={story.avatarImage} 
+                              alt={story.name}
+                              className="w-full h-full object-cover"
+                              onContextMenu={(e) => e.preventDefault()}
+                              draggable="false"
+                            />
+                          )}
+                        </div>
+                      </div>
+                      {!story.hasStory && (
+                        <div className="absolute bottom-0 right-0 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold border-2 border-white">
+                          +
+                        </div>
+                      )}
+                    </div>
+                    <span className="text-xs text-gray-600">{story.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Conversations */}
             {conversations.map((conv, idx) => (
               <div
                 key={conv.id}
@@ -179,8 +271,18 @@ function MessagingHeader() {
                 className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors relative"
               >
                 {/* Avatar */}
-                <div className={`w-12 h-12 rounded-full ${conv.avatarColor} flex items-center justify-center text-white text-xl font-semibold flex-shrink-0`}>
-                  {conv.avatar}
+                <div className={`w-12 h-12 rounded-full ${conv.avatarColor} flex items-center justify-center text-white text-xl font-semibold flex-shrink-0 overflow-hidden`}>
+                  {conv.isText ? (
+                    conv.avatar
+                  ) : (
+                    <img 
+                      src={conv.avatarImage} 
+                      alt={conv.name}
+                      className="w-full h-full object-cover"
+                      onContextMenu={(e) => e.preventDefault()}
+                      draggable="false"
+                    />
+                  )}
                 </div>
 
                 {/* Message Content */}
@@ -222,11 +324,36 @@ function MessagingHeader() {
               </div>
             ))}
           </div>
-        ) : activeTab === 'stories' ? (
-          <div className="flex items-center justify-center py-20 px-4">
-            <p className="text-gray-400 text-center">
-              When your friends post stories, they'll appear here
-            </p>
+        ) : activeTab === 'calls' ? (
+          <div className="p-4">
+            {/* Start New Call Header */}
+            <div className="flex items-center gap-3 mb-3">
+              <svg
+                className="w-8 h-8 text-blue-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                />
+                <line x1="18" y1="6" x2="18" y2="6" strokeWidth={1.5} strokeLinecap="round" />
+                <line x1="15" y1="6" x2="21" y2="6" strokeWidth={1.5} strokeLinecap="round" />
+                <line x1="18" y1="3" x2="18" y2="9" strokeWidth={1.5} strokeLinecap="round" />
+              </svg>
+              <h2 className="text-lg font-normal text-blue-500">Start New Call</h2>
+            </div>
+
+            {/* Description */}
+            <div className="bg-gray-50 rounded px-4 py-3">
+              <p className="text-gray-500 text-sm">
+                You can add up to 200 participants to a call.
+              </p>
+            </div>
           </div>
         ) : null}
       </div>
@@ -240,8 +367,8 @@ function MessagingHeader() {
 }
 
 // Add custom styles for animations
-const chatStyle = document.createElement('style');
-chatStyle.textContent = `
+const style = document.createElement('style');
+style.textContent = `
   @keyframes slide-in-right {
     from { transform: translateX(100%); }
     to   { transform: translateX(0); }
@@ -268,9 +395,24 @@ chatStyle.textContent = `
   .shadow-xs {
     box-shadow: -14px 1px 14px 5px rgba(0, 0, 0, 0.05);
   }
-`;
-document.head.appendChild(chatStyle);
 
-// Render the app
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<MessagingHeader />);
+  /* Disable right-click and text selection */
+  body {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  img {
+    pointer-events: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+  }
+`;
+document.head.appendChild(style);
+
+export default MessagingHeader;
