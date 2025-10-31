@@ -57,8 +57,18 @@ function Chat({ conversation, onClose }) {
             </svg>
           </button>
 
-          <div className={`w-10 h-10 rounded-full ${conversation.avatarColor} flex items-center justify-center`}>
-            <span className="text-white text-xl font-medium">{conversation.avatar}</span>
+          <div className={`w-10 h-10 rounded-full ${conversation.avatarColor} flex items-center justify-center overflow-hidden`}>
+            {conversation.isText ? (
+              <span className="text-white text-xl font-medium">{conversation.avatar}</span>
+            ) : (
+              <img 
+                src={conversation.avatarImage} 
+                alt={conversation.name}
+                className="w-full h-full object-cover"
+                onContextMenu={(e) => e.preventDefault()}
+                draggable="false"
+              />
+            )}
           </div>
 
           <div>
@@ -92,8 +102,27 @@ function MessagingHeader() {
 
   const tabs = [
     { id: 'messages', label: 'MESSAGES' },
-    { id: 'stories', label: 'STORIES' },
+    { id: 'calls', label: 'CALLS' },
     { id: 'settings', label: 'SETTINGS' }
+  ];
+
+  const stories = [
+    {
+      id: 's1',
+      name: 'My story',
+      avatar: 'M',
+      avatarColor: 'bg-orange-500',
+      hasStory: true,
+      isText: true
+    },
+    {
+      id: 's2',
+      name: 'VaVia',
+      avatarImage: 'https://i.ibb.co/C5b875C6/Screenshot-20250904-050841.jpg',
+      avatarColor: 'bg-purple-500',
+      hasStory: true,
+      isText: false
+    }
   ];
 
   const conversations = [
@@ -104,16 +133,18 @@ function MessagingHeader() {
       avatar: 'C',
       avatarColor: 'bg-green-500',
       day: 'Wed',
-      unread: 1
+      unread: 1,
+      isText: true
     },
     {
       id: 2,
       name: 'VaVia',
       message: 'Hey, how are you doing?',
-      avatar: 'V',
+      avatarImage: 'https://i.ibb.co/C5b875C6/Screenshot-20250904-050841.jpg',
       avatarColor: 'bg-purple-500',
       day: 'Tue',
-      read: true
+      read: true,
+      isText: false
     }
   ];
 
@@ -172,6 +203,47 @@ function MessagingHeader() {
         {/* Content Area */}
         {activeTab === 'messages' ? (
           <div className="relative">
+            {/* Stories Section */}
+            <div className="px-4 py-3 border-b border-gray-200">
+              <div className="flex gap-4 overflow-x-auto">
+                {stories.map((story) => (
+                  <div key={story.id} className="flex flex-col items-center gap-1 flex-shrink-0">
+                    <div className="relative">
+                      <div 
+                        className="p-0.5 rounded-full"
+                        style={{
+                          background: story.hasStory 
+                            ? 'linear-gradient(45deg, rgb(240, 148, 51) 0%, rgb(230, 104, 60) 25%, rgb(220, 39, 67) 50%, rgb(204, 35, 102) 75%, rgb(188, 24, 136) 100%)'
+                            : 'transparent'
+                        }}
+                      >
+                        <div className={`w-14 h-14 rounded-full ${story.avatarColor} flex items-center justify-center text-white text-lg font-semibold ${story.hasStory ? 'border-2 border-white' : ''} overflow-hidden`}>
+                          {story.isText ? (
+                            story.avatar
+                          ) : (
+                            <img 
+                              src={story.avatarImage} 
+                              alt={story.name}
+                              className="w-full h-full object-cover"
+                              onContextMenu={(e) => e.preventDefault()}
+                              draggable="false"
+                            />
+                          )}
+                        </div>
+                      </div>
+                      {!story.hasStory && (
+                        <div className="absolute bottom-0 right-0 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold border-2 border-white">
+                          +
+                        </div>
+                      )}
+                    </div>
+                    <span className="text-xs text-gray-600">{story.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Conversations */}
             {conversations.map((conv, idx) => (
               <div
                 key={conv.id}
@@ -179,8 +251,18 @@ function MessagingHeader() {
                 className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors relative"
               >
                 {/* Avatar */}
-                <div className={`w-12 h-12 rounded-full ${conv.avatarColor} flex items-center justify-center text-white text-xl font-semibold flex-shrink-0`}>
-                  {conv.avatar}
+                <div className={`w-12 h-12 rounded-full ${conv.avatarColor} flex items-center justify-center text-white text-xl font-semibold flex-shrink-0 overflow-hidden`}>
+                  {conv.isText ? (
+                    conv.avatar
+                  ) : (
+                    <img 
+                      src={conv.avatarImage} 
+                      alt={conv.name}
+                      className="w-full h-full object-cover"
+                      onContextMenu={(e) => e.preventDefault()}
+                      draggable="false"
+                    />
+                  )}
                 </div>
 
                 {/* Message Content */}
@@ -222,10 +304,10 @@ function MessagingHeader() {
               </div>
             ))}
           </div>
-        ) : activeTab === 'stories' ? (
+        ) : activeTab === 'calls' ? (
           <div className="flex items-center justify-center py-20 px-4">
             <p className="text-gray-400 text-center">
-              When your friends post stories, they'll appear here
+              All Calls will appear here
             </p>
           </div>
         ) : null}
@@ -267,6 +349,23 @@ chatStyle.textContent = `
   /* Very small, subtle shadow */
   .shadow-xs {
     box-shadow: -14px 1px 14px 5px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Disable right-click and text selection */
+  body {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  img {
+    pointer-events: none;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
   }
 `;
 document.head.appendChild(chatStyle);
