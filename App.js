@@ -34,7 +34,6 @@ function Chat({ conversation, onClose }) {
     <div className={`fixed inset-0 bg-white z-50 flex flex-col ${isClosing ? 'animate-slide-out-right' : 'animate-slide-in-right'}`}>
       {/* Header – very small bottom shadow, no border */}
       <header className="relative flex items-center justify-between px-4 py-3 bg-white shadow-xs">
-        {/* Tiny transparent spacer to allow shadow to show */}
         <div className="absolute inset-x-0 bottom-0 h-1 bg-transparent -z-10 pointer-events-none"></div>
 
         <div className="flex items-center gap-3">
@@ -90,7 +89,6 @@ function Chat({ conversation, onClose }) {
         </button>
       </header>
 
-      {/* Empty body – messages will go here later */}
       <main className="flex-1 bg-white"></main>
     </div>
   );
@@ -158,7 +156,7 @@ function MessagingHeader() {
 
   return (
     <>
-      {/* Floating Action Button - Outside animated container */}
+      {/* Floating Action Button */}
       <button
         className={`fixed right-6 bottom-6 w-14 h-14 rounded-full text-white flex items-center justify-center shadow-lg hover:shadow-xl transition-all active:scale-90 active:shadow-md z-40 ${openChat ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         style={{ backgroundColor: '#749cbf' }}
@@ -185,7 +183,7 @@ function MessagingHeader() {
       </button>
 
       <div className={`w-full max-w-md mx-auto bg-white relative transition-transform duration-300 ${openChat ? 'animate-push-left' : ''}`}>
-        {/* Search Bar - Updated: White background + ash white border */}
+        {/* Search Bar */}
         <div className="px-4 py-3 border-b border-gray-200">
           <div className="flex items-center gap-3 bg-white rounded-full px-4 py-2 border border-gray-200">
             <Search className="w-5 h-5 text-gray-400" />
@@ -226,7 +224,6 @@ function MessagingHeader() {
                 {stories.map((story) => (
                   <div key={story.id} className="flex flex-col items-center gap-1 flex-shrink-0">
                     <div className="relative">
-                      {/* Thinner story ring */}
                       <div 
                         className="p-[1.5px] rounded-full"
                         style={{
@@ -235,7 +232,6 @@ function MessagingHeader() {
                             : 'transparent'
                         }}
                       >
-                        {/* Larger story avatar */}
                         <div className={`w-16 h-16 rounded-full ${story.avatarColor} flex items-center justify-center text-white text-xl font-semibold ${story.hasStory ? 'border-2 border-white' : ''} overflow-hidden`}>
                           {story.isText ? (
                             story.avatar
@@ -262,14 +258,13 @@ function MessagingHeader() {
               </div>
             </div>
 
-            {/* Conversations - Bigger Items */}
+            {/* Conversations */}
             {conversations.map((conv, idx) => (
               <div
                 key={conv.id}
                 onClick={() => handleConversationClick(conv)}
                 className="flex items-center gap-3 px-4 py-4 hover:bg-gray-50 cursor-pointer transition-colors relative"
               >
-                {/* Larger Avatar */}
                 <div className={`w-14 h-14 rounded-full ${conv.avatarColor} flex items-center justify-center text-white text-2xl font-semibold flex-shrink-0 overflow-hidden`}>
                   {conv.isText ? (
                     conv.avatar
@@ -284,7 +279,6 @@ function MessagingHeader() {
                   )}
                 </div>
 
-                {/* Message Content */}
                 <div className="flex-1 min-w-0">
                   <h3 className="text-lg font-semibold text-gray-900">
                     {conv.name}
@@ -294,7 +288,6 @@ function MessagingHeader() {
                   </p>
                 </div>
 
-                {/* Right Side - Day and Badge */}
                 <div className="flex flex-col items-end gap-1 flex-shrink-0">
                   <span className="text-gray-400 text-xs">
                     {conv.day}
@@ -304,13 +297,13 @@ function MessagingHeader() {
                       {conv.unread}
                     </div>
                   ) : conv.read ? (
+                    // Checkmark color changed to #749cbf
                     <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="none" className="w-5 h-5">
-                      <path stroke="#535358" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 17l5 5 12-12M16 20l2 2 12-12"></path>
+                      <path stroke="#749cbf" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 17l5 5 12-12M16 20l2 2 12-12"></path>
                     </svg>
                   ) : null}
                 </div>
 
-                {/* Divider adjusted for larger avatar */}
                 {idx < conversations.length - 1 && (
                   <div
                     className="absolute bottom-0 h-px bg-gray-200"
@@ -325,7 +318,6 @@ function MessagingHeader() {
           </div>
         ) : activeTab === 'calls' ? (
           <div>
-            {/* Start New Call Header */}
             <div className="p-4 bg-white">
               <div className="flex items-center gap-3">
                 <svg
@@ -349,7 +341,6 @@ function MessagingHeader() {
               </div>
             </div>
 
-            {/* Description */}
             <div className="px-4 py-3 bg-gray-50">
               <p className="text-gray-500 text-sm">
                 You can add up to 200 participants to a call.
@@ -359,7 +350,6 @@ function MessagingHeader() {
         ) : null}
       </div>
 
-      {/* Chat Component */}
       {openChat && (
         <Chat conversation={openChat} onClose={handleCloseChat} />
       )}
@@ -367,7 +357,7 @@ function MessagingHeader() {
   );
 }
 
-// Add custom styles for animations
+// Custom styles
 const chatStyle = document.createElement('style');
 chatStyle.textContent = `
   @keyframes slide-in-right {
@@ -392,12 +382,10 @@ chatStyle.textContent = `
     animation: push-left 0.3s ease-out forwards;
   }
 
-  /* Very small, subtle shadow */
   .shadow-xs {
     box-shadow: -14px 1px 14px 5px rgba(0, 0, 0, 0.05);
   }
 
-  /* Disable right-click and text selection */
   body {
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -416,6 +404,6 @@ chatStyle.textContent = `
 `;
 document.head.appendChild(chatStyle);
 
-// Render the app
+// Render
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<MessagingHeader />);
