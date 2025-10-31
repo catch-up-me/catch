@@ -158,7 +158,7 @@ function MessagingHeader() {
 
   return (
     <>
-      {/* Floating Action Button - Outside animated container */}
+      {/* Floating Action Button */}
       <button
         className={`fixed right-6 bottom-6 w-14 h-14 rounded-full text-white flex items-center justify-center shadow-lg hover:shadow-xl transition-all active:scale-90 active:shadow-md z-40 ${openChat ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         style={{ backgroundColor: '#749cbf' }}
@@ -185,9 +185,9 @@ function MessagingHeader() {
       </button>
 
       <div className={`w-full max-w-md mx-auto bg-white relative transition-transform duration-300 ${openChat ? 'animate-push-left' : ''}`}>
-        {/* Search Bar */}
+        {/* Search Bar - Updated: White bg + ash white border */}
         <div className="px-4 py-3 border-b border-gray-200">
-          <div className="flex items-center gap-3 bg-gray-100 rounded-full px-4 py-2">
+          <div className="flex items-center gap-3 bg-white rounded-full px-4 py-2 border border-gray-200">
             <Search className="w-5 h-5 text-gray-400" />
             <input
               type="text"
@@ -308,7 +308,7 @@ function MessagingHeader() {
                   ) : null}
                 </div>
 
-                {/* Custom Divider: Starts after avatar, ends at right edge */}
+                {/* Custom Divider */}
                 {idx < conversations.length - 1 && (
                   <div
                     className="absolute bottom-0 h-px bg-gray-200"
@@ -347,7 +347,7 @@ function MessagingHeader() {
               </div>
             </div>
 
-            {/* Description - Outside container */}
+            {/* Description */}
             <div className="px-4 py-3 bg-gray-50">
               <p className="text-gray-500 text-sm">
                 You can add up to 200 participants to a call.
