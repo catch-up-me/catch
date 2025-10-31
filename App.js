@@ -226,15 +226,17 @@ function MessagingHeader() {
                 {stories.map((story) => (
                   <div key={story.id} className="flex flex-col items-center gap-1 flex-shrink-0">
                     <div className="relative">
+                      {/* Thinner story ring */}
                       <div 
-                        className="p-0.5 rounded-full"
+                        className="p-[1.5px] rounded-full"
                         style={{
                           background: story.hasStory 
                             ? 'linear-gradient(45deg, rgb(240, 148, 51) 0%, rgb(230, 104, 60) 25%, rgb(220, 39, 67) 50%, rgb(204, 35, 102) 75%, rgb(188, 24, 136) 100%)'
                             : 'transparent'
                         }}
                       >
-                        <div className={`w-14 h-14 rounded-full ${story.avatarColor} flex items-center justify-center text-white text-lg font-semibold ${story.hasStory ? 'border-2 border-white' : ''} overflow-hidden`}>
+                        {/* Larger story avatar */}
+                        <div className={`w-16 h-16 rounded-full ${story.avatarColor} flex items-center justify-center text-white text-xl font-semibold ${story.hasStory ? 'border-2 border-white' : ''} overflow-hidden`}>
                           {story.isText ? (
                             story.avatar
                           ) : (
@@ -260,15 +262,15 @@ function MessagingHeader() {
               </div>
             </div>
 
-            {/* Conversations */}
+            {/* Conversations - Bigger Items */}
             {conversations.map((conv, idx) => (
               <div
                 key={conv.id}
                 onClick={() => handleConversationClick(conv)}
-                className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 cursor-pointer transition-colors relative"
+                className="flex items-center gap-3 px-4 py-4 hover:bg-gray-50 cursor-pointer transition-colors relative"
               >
-                {/* Avatar */}
-                <div className={`w-12 h-12 rounded-full ${conv.avatarColor} flex items-center justify-center text-white text-xl font-semibold flex-shrink-0 overflow-hidden`}>
+                {/* Larger Avatar */}
+                <div className={`w-14 h-14 rounded-full ${conv.avatarColor} flex items-center justify-center text-white text-2xl font-semibold flex-shrink-0 overflow-hidden`}>
                   {conv.isText ? (
                     conv.avatar
                   ) : (
@@ -284,7 +286,7 @@ function MessagingHeader() {
 
                 {/* Message Content */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-base font-semibold text-gray-900">
+                  <h3 className="text-lg font-semibold text-gray-900">
                     {conv.name}
                   </h3>
                   <p className="text-sm text-gray-400 truncate">
@@ -298,22 +300,22 @@ function MessagingHeader() {
                     {conv.day}
                   </span>
                   {conv.unread > 0 ? (
-                    <div className="w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-medium" style={{ backgroundColor: '#749cbf' }}>
+                    <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium" style={{ backgroundColor: '#749cbf' }}>
                       {conv.unread}
                     </div>
                   ) : conv.read ? (
-                    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="none" className="w-4 h-4">
+                    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="none" className="w-5 h-5">
                       <path stroke="#535358" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 17l5 5 12-12M16 20l2 2 12-12"></path>
                     </svg>
                   ) : null}
                 </div>
 
-                {/* Custom Divider: Starts after avatar, ends at right edge */}
+                {/* Divider adjusted for larger avatar */}
                 {idx < conversations.length - 1 && (
                   <div
                     className="absolute bottom-0 h-px bg-gray-200"
                     style={{
-                      left: '4rem',
+                      left: '4.5rem',
                       right: 0,
                     }}
                   />
@@ -347,7 +349,7 @@ function MessagingHeader() {
               </div>
             </div>
 
-            {/* Description - Outside container */}
+            {/* Description */}
             <div className="px-4 py-3 bg-gray-50">
               <p className="text-gray-500 text-sm">
                 You can add up to 200 participants to a call.
