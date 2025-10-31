@@ -32,7 +32,6 @@ function Chat({ conversation, onClose }) {
 
   return (
     <div className={`fixed inset-0 bg-white z-50 flex flex-col ${isClosing ? 'animate-slide-out-right' : 'animate-slide-in-right'}`}>
-      {/* Header – very small bottom shadow, no border */}
       <header className="relative flex items-center justify-between px-4 py-3 bg-white shadow-xs">
         <div className="absolute inset-x-0 bottom-0 h-1 bg-transparent -z-10 pointer-events-none"></div>
 
@@ -135,7 +134,7 @@ function MessagingHeader() {
           </div>
         </div>
 
-        {/* Navigation Tabs - BORDER REPLACED WITH SHADOW */}
+        {/* Navigation Tabs - Shadow instead of border */}
         <div className="flex shadow-xs">
           {tabs.map((tab) => (
             <button
@@ -156,7 +155,7 @@ function MessagingHeader() {
         {/* Content Area */}
         {activeTab === 'messages' ? (
           <div className="relative">
-            {/* Stories Section - NO BORDER */}
+            {/* Stories Section */}
             <div className="px-4 py-3">
               <div className="flex gap-4 overflow-x-auto">
                 {stories.map((story) => (
@@ -196,13 +195,14 @@ function MessagingHeader() {
               </div>
             </div>
 
-            {/* Conversations - NO DIVIDERS */}
+            {/* Conversations */}
             {conversations.map((conv) => (
               <div
                 key={conv.id}
                 onClick={() => handleConversationClick(conv)}
                 className="flex items-center gap-3 px-4 py-4 hover:bg-gray-50 cursor-pointer transition-colors relative"
               >
+                {/* Avatar */}
                 <div className={`w-14 h-14 rounded-full ${conv.avatarColor} flex items-center justify-center text-white text-2xl font-semibold flex-shrink-0 overflow-hidden`}>
                   {conv.isText ? (
                     conv.avatar
@@ -217,11 +217,26 @@ function MessagingHeader() {
                   )}
                 </div>
 
+                {/* Name & Message */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-semibold text-gray-900">{conv.name}</h3>
+                  <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-1">
+                    {conv.name}
+                    {(conv.name === 'VaVia' || conv.name === 'Chizaram') && (
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 56 56"
+                        fill="#5ab1dc"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M 23.6641 52.3985 C 26.6172 55.375 29.3594 55.3516 32.3126 52.3985 L 35.9219 48.8125 C 36.2969 48.4610 36.6250 48.3203 37.1172 48.3203 L 42.1797 48.3203 C 46.3749 48.3203 48.3204 46.3985 48.3204 42.1797 L 48.3204 37.1172 C 48.3204 36.625 48.4610 36.2969 48.8124 35.9219 L 52.3749 32.3125 C 55.3749 29.3594 55.3514 26.6172 52.3749 23.6641 L 48.8124 20.0547 C 48.4610 19.7031 48.3204 19.3516 48.3204 18.8829 L 48.3204 13.7969 C 48.3204 9.625 46.3985 7.6563 42.1797 7.6563 L 37.1172 7.6563 C 36.6250 7.6563 36.2969 7.5391 35.9219 7.1875 L 32.3126 3.6016 C 29.3594 .6250 26.6172 .6485 23.6641 3.6016 L 20.0547 7.1875 C 19.7032 7.5391 19.3516 7.6563 18.8828 7.6563 L 13.7969 7.6563 C 9.6016 7.6563 7.6563 9.5782 7.6563 13.7969 L 7.6563 18.8829 C 7.6563 19.3516 7.5391 19.7031 7.1876 20.0547 L 3.6016 23.6641 C .6251 26.6172 .6485 29.3594 3.6016 32.3125 L 7.1876 35.9219 C 7.5391 36.2969 7.6563 36.625 7.6563 37.1172 L 7.6563 42.1797 C 7.6563 46.3750 9.6016 48.3203 13.7969 48.3203 L 18.8828 48.3203 C 19.3516 48.3203 19.7032 48.4610 20.0547 48.8125 Z M 24.0391 39.7891 C 23.3126 39.7891 22.8438 39.5547 22.4923 39.1563 L 14.6641 30.4609 C 14.3360 30.0860 14.1485 29.6172 14.1485 29.125 C 14.1485 28.0234 14.9923 27.2031 16.1876 27.2031 C 16.8204 27.2031 17.2891 27.4141 17.7110 27.8594 L 23.9219 34.7266 L 35.9923 17.7344 C 36.4610 17.0547 36.9297 16.7734 37.7501 16.7734 C 38.8985 16.7734 39.7188 17.6172 39.7188 18.7188 C 39.7188 19.1172 39.5547 19.5860 39.2969 19.9609 L 25.6328 39.0625 C 25.2813 39.5078 24.7423 39.7891 24.0391 39.7891 Z"></path>
+                      </svg>
+                    )}
+                  </h3>
                   <p className="text-sm text-gray-400 truncate">{conv.message}</p>
                 </div>
 
+                {/* Day + Badge or Checkmark */}
                 <div className="flex flex-col items-end gap-1 flex-shrink-0">
                   <span className="text-gray-400 text-xs">{conv.day}</span>
                   {conv.unread > 0 ? (
@@ -229,8 +244,29 @@ function MessagingHeader() {
                       {conv.unread}
                     </div>
                   ) : conv.read ? (
-                    <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="none" className="w-5 h-5">
-                      <path stroke="#535358" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 17l5 5 12-12M16 20l2 2 12-12"></path>
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-5 h-5"
+                    >
+                      <g clipPath="url(#clip0_949_23339)">
+                        <path
+                          d="M17.5821 6.95711C17.9726 6.56658 17.9726 5.93342 17.5821 5.54289C17.1916 5.15237 16.5584 5.15237 16.1679 5.54289L5.54545 16.1653L1.70711 12.327C1.31658 11.9365 0.683417 11.9365 0.292893 12.327C-0.0976311 12.7175 -0.097631 13.3507 0.292893 13.7412L4.83835 18.2866C5.22887 18.6772 5.86204 18.6772 6.25256 18.2866L17.5821 6.95711Z"
+                          fill="#749cbf"
+                        />
+                        <path
+                          d="M23.5821 6.95711C23.9726 6.56658 23.9726 5.93342 23.5821 5.54289C23.1915 5.15237 22.5584 5.15237 22.1678 5.54289L10.8383 16.8724C10.4478 17.263 10.4478 17.8961 10.8383 18.2866C11.2288 18.6772 11.862 18.6772 12.2525 18.2866L23.5821 6.95711Z"
+                          fill="#749cbf"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_949_23339">
+                          <rect width="24" height="24" fill="white" />
+                        </clipPath>
+                      </defs>
                     </svg>
                   ) : null}
                 </div>
@@ -262,7 +298,7 @@ function MessagingHeader() {
   );
 }
 
-// Custom Styles (including shadow)
+// Custom Styles
 const chatStyle = document.createElement('style');
 chatStyle.textContent = `
   @keyframes slide-in-right { from { transform: translateX(100%); } to { transform: translateX(0); } }
@@ -272,7 +308,6 @@ chatStyle.textContent = `
   @keyframes push-left { from { transform: translateX(0); } to { transform: translateX(-100%); } }
   .animate-push-left { animation: push-left 0.3s ease-out forwards; }
 
-  /* Subtle shadow used for tabs and header */
   .shadow-xs {
     box-shadow: -14px 1px 14px 5px rgba(0, 0, 0, 0.05);
   }
