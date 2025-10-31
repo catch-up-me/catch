@@ -1,322 +1,297 @@
 const { useState } = React;
 
-// Lucide Search Icon Component
-const Search = ({ className }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <circle cx="11" cy="11" r="8"></circle>
-    <path d="m21 21-4.35-4.35"></path>
-  </svg>
-);
+function MessagingApp() {
+  const [activeTab, setActiveTab] = useState(0);
+  const [openChat, setOpenChat] = useState(null);
+  const [currentView, setCurrentView] = useState('messages');
 
-// Chat Component
-function Chat({ conversation, onClose }) {
-  const [isClosing, setIsClosing] = useState(false);
+  const stories = [
+    {
+      id: 's1',
+      name: 'My story',
+      avatar: 'M',
+      avatarColor: 'bg-orange-500',
+      hasStory: true,
+      isText: true
+    },
+    {
+      id: 's2',
+      name: 'VaVia',
+      avatarImage: 'https://i.ibb.co/C5b875C6/Screenshot-20250904-050841.jpg',
+      avatarColor: 'bg-purple-500',
+      hasStory: true,
+      isText: false
+    }
+  ];
 
-  const handleClose = () => {
-    setIsClosing(true);
-    setTimeout(() => {
-      onClose();
-    }, 300);
+  const conversations = [
+    {
+      id: 1,
+      name: 'Chizaram',
+      message: "Yo! Chizaram's in",
+      avatar: 'C',
+      avatarColor: 'bg-green-500',
+      day: 'Wed',
+      unread: 1,
+      isText: true
+    }
+  ];
+
+  const handleConversationClick = (conversation) => {
+    setOpenChat(conversation);
+  };
+
+  const handleCloseChat = () => {
+    setOpenChat(null);
   };
 
   return (
-    <div className={`fixed inset-0 bg-white z-50 flex flex-col ${isClosing ? 'animate-slide-out-right' : 'animate-slide-in-right'}`}>
-      <header className="relative flex items-center justify-between px-4 py-3 bg-white shadow-xs">
-        <div className="absolute inset-x-0 bottom-0 h-1 bg-transparent -z-10 pointer-events-none"></div>
-
-        <div className="flex items-center gap-3">
-          <button
-            onClick={handleClose}
-            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-          >
-            <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    <div className="min-h-screen bg-white relative overflow-hidden">
+      <div className={`transition-transform duration-300 ${openChat ? '-translate-x-full' : 'translate-x-0'}`}>
+        <div className="w-full bg-white pt-5 px-6 pb-0 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <svg 
+              className="w-7 h-7 text-gray-800 cursor-pointer" 
+              fill="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
             </svg>
-          </button>
-
-          <div className={`w-10 h-10 rounded-full ${conversation.avatarColor} flex items-center justify-center overflow-hidden`}>
-            {conversation.isText ? (
-              <span className="text-white text-xl font-medium">{conversation.avatar}</span>
-            ) : (
-              <img 
-                src={conversation.avatarImage} 
-                alt={conversation.name}
-                className="w-full h-full object-cover"
-                onContextMenu={(e) => e.preventDefault()}
-                draggable="false"
-              />
-            )}
+            <h1 className="text-xl font-semibold text-gray-800">Messages</h1>
+            <svg 
+              className="w-6 h-6 text-gray-800 cursor-pointer" 
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+            </svg>
           </div>
 
-          <div>
-            <h1 className="text-gray-900 font-medium">{conversation.name}</h1>
-            <p className="text-gray-500 text-xs">last seen Oct 15 at 06:54 PM</p>
+          <div className="flex justify-around bg-white border-b border-gray-200 shadow-sm">
+            <button
+              onClick={() => {
+                setActiveTab(0);
+                setCurrentView('messages');
+              }}
+              className="flex-1 text-center py-4 bg-transparent border-none cursor-pointer relative group"
+            >
+              <svg 
+                className="w-6 h-6 mx-auto transition-colors"
+                style={{ color: activeTab === 0 ? '#749cbf' : '#4b5563' }}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                onMouseEnter={(e) => e.currentTarget.style.color = '#749cbf'}
+                onMouseLeave={(e) => e.currentTarget.style.color = activeTab === 0 ? '#749cbf' : '#4b5563'}
+              >
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+              {activeTab === 0 && (
+                <span className="absolute bottom-0 left-1/4 w-1/2 h-0.5 rounded" style={{ backgroundColor: '#749cbf' }}></span>
+              )}
+            </button>
+
+            <button
+              onClick={() => {
+                setActiveTab(1);
+                setCurrentView('contacts');
+              }}
+              className="flex-1 text-center py-4 bg-transparent border-none cursor-pointer relative group"
+            >
+              <svg 
+                className="w-7 h-7 mx-auto transition-colors"
+                style={{ color: activeTab === 1 ? '#749cbf' : '#4b5563' }}
+                viewBox="0 0 24 24"
+                fill="none"
+                onMouseEnter={(e) => e.currentTarget.style.color = '#749cbf'}
+                onMouseLeave={(e) => e.currentTarget.style.color = activeTab === 1 ? '#749cbf' : '#4b5563'}
+              >
+                <path fillRule="evenodd" clipRule="evenodd" d="M5 9.5C5 7.01472 7.01472 5 9.5 5C11.9853 5 14 7.01472 14 9.5C14 11.9853 11.9853 14 9.5 14C7.01472 14 5 11.9853 5 9.5Z" fill="currentColor" style={{ fill: 'currentColor' }}/>
+                <path d="M14.3675 12.0632C14.322 12.1494 14.3413 12.2569 14.4196 12.3149C15.0012 12.7454 15.7209 13 16.5 13C18.433 13 20 11.433 20 9.5C20 7.567 18.433 6 16.5 6C15.7209 6 15.0012 6.2546 14.4196 6.68513C14.3413 6.74313 14.322 6.85058 14.3675 6.93679C14.7714 7.70219 15 8.5744 15 9.5C15 10.4256 14.7714 11.2978 14.3675 12.0632Z" fill="currentColor" style={{ fill: 'currentColor' }}/>
+                <path fillRule="evenodd" clipRule="evenodd" d="M4.64115 15.6993C5.87351 15.1644 7.49045 15 9.49995 15C11.5112 15 13.1293 15.1647 14.3621 15.7008C15.705 16.2847 16.5212 17.2793 16.949 18.6836C17.1495 19.3418 16.6551 20 15.9738 20H3.02801C2.34589 20 1.85045 19.3408 2.05157 18.6814C2.47994 17.2769 3.29738 16.2826 4.64115 15.6993Z" fill="currentColor" style={{ fill: 'currentColor' }}/>
+                <path d="M14.8185 14.0364C14.4045 14.0621 14.3802 14.6183 14.7606 14.7837V14.7837C15.803 15.237 16.5879 15.9043 17.1508 16.756C17.6127 17.4549 18.33 18 19.1677 18H20.9483C21.6555 18 22.1715 17.2973 21.9227 16.6108C21.9084 16.5713 21.8935 16.5321 21.8781 16.4932C21.5357 15.6286 20.9488 14.9921 20.0798 14.5864C19.2639 14.2055 18.2425 14.0483 17.0392 14.0008L17.0194 14H16.9997C16.2909 14 15.5506 13.9909 14.8185 14.0364Z" fill="currentColor" style={{ fill: 'currentColor' }}/>
+              </svg>
+              {activeTab === 1 && (
+                <span className="absolute bottom-0 left-1/4 w-1/2 h-0.5 rounded" style={{ backgroundColor: '#749cbf' }}></span>
+              )}
+            </button>
+
+            <button
+              onClick={() => {
+                setActiveTab(2);
+                setCurrentView('settings');
+              }}
+              className="flex-1 text-center py-4 bg-transparent border-none cursor-pointer relative group"
+            >
+              <svg 
+                className="w-6 h-6 mx-auto transition-colors"
+                style={{ color: activeTab === 2 ? '#749cbf' : '#4b5563' }}
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                onMouseEnter={(e) => e.currentTarget.style.color = '#749cbf'}
+                onMouseLeave={(e) => e.currentTarget.style.color = activeTab === 2 ? '#749cbf' : '#4b5563'}
+              >
+                <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+              </svg>
+              {activeTab === 2 && (
+                <span className="absolute bottom-0 left-1/4 w-1/2 h-0.5 rounded" style={{ backgroundColor: '#749cbf' }}></span>
+              )}
+            </button>
           </div>
         </div>
 
-        <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-          <svg className="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-            <circle cx="12" cy="5" r="2" />
-            <circle cx="12" cy="12" r="2" />
-            <circle cx="12" cy="19" r="2" />
-          </svg>
-        </button>
-      </header>
+        {currentView === 'messages' && (
+          <div className="px-4 py-3">
+            <div className="flex gap-4 overflow-x-auto">
+              {stories.map((story) => (
+                <div key={story.id} className="flex flex-col items-center gap-1 flex-shrink-0">
+                  <div className="relative">
+                    <div 
+                      style={{
+                        padding: '2px',
+                        borderRadius: '9999px',
+                        background: story.hasStory 
+                          ? 'linear-gradient(45deg, rgb(240, 148, 51) 0%, rgb(230, 104, 60) 25%, rgb(220, 39, 67) 50%, rgb(204, 35, 102) 75%, rgb(188, 24, 136) 100%)'
+                          : 'transparent'
+                      }}
+                    >
+                      <div 
+                        className={`w-16 h-16 rounded-full ${story.avatarColor} flex items-center justify-center text-white text-xl font-semibold overflow-hidden`}
+                        style={{ border: story.hasStory ? '2px solid white' : 'none' }}
+                      >
+                        {story.isText ? (
+                          story.avatar
+                        ) : (
+                          <img 
+                            src={story.avatarImage} 
+                            alt={story.name}
+                            className="w-full h-full object-cover"
+                            onContextMenu={(e) => e.preventDefault()}
+                            draggable="false"
+                          />
+                        )}
+                      </div>
+                    </div>
+                    {!story.hasStory && (
+                      <div className="absolute bottom-0 right-0 w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-white" style={{ backgroundColor: '#749cbf' }}>
+                        +
+                      </div>
+                    )}
+                  </div>
+                  <span className="text-xs text-gray-600">{story.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
-      <main className="flex-1 bg-white"></main>
+        {currentView === 'messages' && conversations.map((conv, idx) => (
+          <div
+            key={conv.id}
+            onClick={() => handleConversationClick(conv)}
+            className="flex items-center gap-3 px-4 py-4 hover:bg-gray-50 cursor-pointer transition-colors relative"
+          >
+            <div className={`w-14 h-14 rounded-full ${conv.avatarColor} flex items-center justify-center text-white text-2xl font-semibold flex-shrink-0 overflow-hidden`}>
+              {conv.isText ? (
+                conv.avatar
+              ) : (
+                <img 
+                  src={conv.avatarImage} 
+                  alt={conv.name}
+                  className="w-full h-full object-cover"
+                  onContextMenu={(e) => e.preventDefault()}
+                  draggable="false"
+                />
+              )}
+            </div>
+
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1">
+                <h3 className="text-lg font-semibold text-gray-900">
+                  {conv.name}
+                </h3>
+                <svg className="w-4 h-4 flex-shrink-0" fill="#5ab1dc" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg" stroke="#5ab1dc">
+                  <path d="M 23.6641 52.3985 C 26.6172 55.375 29.3594 55.3516 32.3126 52.3985 L 35.9219 48.8125 C 36.2969 48.4610 36.6250 48.3203 37.1172 48.3203 L 42.1797 48.3203 C 46.3749 48.3203 48.3204 46.3985 48.3204 42.1797 L 48.3204 37.1172 C 48.3204 36.625 48.4610 36.2969 48.8124 35.9219 L 52.3749 32.3125 C 55.3749 29.3594 55.3514 26.6172 52.3749 23.6641 L 48.8124 20.0547 C 48.4610 19.7031 48.3204 19.3516 48.3204 18.8829 L 48.3204 13.7969 C 48.3204 9.625 46.3985 7.6563 42.1797 7.6563 L 37.1172 7.6563 C 36.6250 7.6563 36.2969 7.5391 35.9219 7.1875 L 32.3126 3.6016 C 29.3594 .6250 26.6172 .6485 23.6641 3.6016 L 20.0547 7.1875 C 19.7032 7.5391 19.3516 7.6563 18.8828 7.6563 L 13.7969 7.6563 C 9.6016 7.6563 7.6563 9.5782 7.6563 13.7969 L 7.6563 18.8829 C 7.6563 19.3516 7.5391 19.7031 7.1876 20.0547 L 3.6016 23.6641 C .6251 26.6172 .6485 29.3594 3.6016 32.3125 L 7.1876 35.9219 C 7.5391 36.2969 7.6563 36.625 7.6563 37.1172 L 7.6563 42.1797 C 7.6563 46.3750 9.6016 48.3203 13.7969 48.3203 L 18.8828 48.3203 C 19.3516 48.3203 19.7032 48.4610 20.0547 48.8125 Z M 24.0391 39.7891 C 23.3126 39.7891 22.8438 39.5547 22.4923 39.1563 L 14.6641 30.4609 C 14.3360 30.0860 14.1485 29.6172 14.1485 29.125 C 14.1485 28.0234 14.9923 27.2031 16.1876 27.2031 C 16.8204 27.2031 17.2891 27.4141 17.7110 27.8594 L 23.9219 34.7266 L 35.9923 17.7344 C 36.4610 17.0547 36.9297 16.7734 37.7501 16.7734 C 38.8985 16.7734 39.7188 17.6172 39.7188 18.7188 C 39.7188 19.1172 39.5547 19.5860 39.2969 19.9609 L 25.6328 39.0625 C 25.2813 39.5078 24.7423 39.7891 24.0391 39.7891 Z"></path>
+                </svg>
+              </div>
+              <p className="text-sm text-gray-400 truncate">
+                {conv.message}
+              </p>
+            </div>
+
+            <div className="flex flex-col items-end gap-1 flex-shrink-0">
+              <span className="text-gray-400 text-xs">
+                {conv.day}
+              </span>
+              {conv.unread > 0 && (
+                <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium" style={{ backgroundColor: '#749cbf' }}>
+                  {conv.unread}
+                </div>
+              )}
+            </div>
+
+            {idx < conversations.length - 1 && (
+              <div
+                className="absolute bottom-0 h-px bg-gray-200"
+                style={{
+                  left: '4.5rem',
+                  right: 0,
+                }}
+              />
+            )}
+          </div>
+        ))}
+
+        {currentView === 'contacts' && (
+          <div className="flex items-center justify-center h-96">
+            <div className="text-center">
+              <svg className="w-24 h-24 mx-auto text-gray-300 mb-4" viewBox="0 0 24 24" fill="none">
+                <path fillRule="evenodd" clipRule="evenodd" d="M5 9.5C5 7.01472 7.01472 5 9.5 5C11.9853 5 14 7.01472 14 9.5C14 11.9853 11.9853 14 9.5 14C7.01472 14 5 11.9853 5 9.5Z" fill="currentColor"/>
+                <path d="M14.3675 12.0632C14.322 12.1494 14.3413 12.2569 14.4196 12.3149C15.0012 12.7454 15.7209 13 16.5 13C18.433 13 20 11.433 20 9.5C20 7.567 18.433 6 16.5 6C15.7209 6 15.0012 6.2546 14.4196 6.68513C14.3413 6.74313 14.322 6.85058 14.3675 6.93679C14.7714 7.70219 15 8.5744 15 9.5C15 10.4256 14.7714 11.2978 14.3675 12.0632Z" fill="currentColor"/>
+                <path fillRule="evenodd" clipRule="evenodd" d="M4.64115 15.6993C5.87351 15.1644 7.49045 15 9.49995 15C11.5112 15 13.1293 15.1647 14.3621 15.7008C15.705 16.2847 16.5212 17.2793 16.949 18.6836C17.1495 19.3418 16.6551 20 15.9738 20H3.02801C2.34589 20 1.85045 19.3408 2.05157 18.6814C2.47994 17.2769 3.29738 16.2826 4.64115 15.6993Z" fill="currentColor"/>
+                <path d="M14.8185 14.0364C14.4045 14.0621 14.3802 14.6183 14.7606 14.7837V14.7837C15.803 15.237 16.5879 15.9043 17.1508 16.756C17.6127 17.4549 18.33 18 19.1677 18H20.9483C21.6555 18 22.1715 17.2973 21.9227 16.6108C21.9084 16.5713 21.8935 16.5321 21.8781 16.4932C21.5357 15.6286 20.9488 14.9921 20.0798 14.5864C19.2639 14.2055 18.2425 14.0483 17.0392 14.0008L17.0194 14H16.9997C16.2909 14 15.5506 13.9909 14.8185 14.0364Z" fill="currentColor"/>
+              </svg>
+              <p className="text-gray-500 text-lg">No contacts yet</p>
+            </div>
+          </div>
+        )}
+
+        {currentView === 'settings' && (
+          <div className="flex items-center justify-center h-96">
+            <div className="text-center">
+              <svg className="w-24 h-24 mx-auto text-gray-300 mb-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.62-.07.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+              </svg>
+              <p className="text-gray-500 text-lg">Settings</p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {currentView === 'messages' && (
+        <button 
+          className={`fixed bottom-6 right-6 w-14 h-14 text-white rounded-full shadow-lg flex items-center justify-center text-2xl font-light transition-all duration-300 z-40 ${
+            openChat ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          }`}
+          style={{ backgroundColor: '#749cbf' }}
+          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#638aa8'}
+          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#749cbf'}
+          onClick={() => {}}
+        >
+          +
+        </button>
+      )}
+
+      {openChat && (
+        <Chat conversation={openChat} onClose={handleCloseChat} />
+      )}
     </div>
   );
 }
 
-function MessagingHeader() {
-  const [activeTab, setActiveTab] = useState('messages');
-  const [openChat, setOpenChat] = useState(null);
-
-  const tabs = [
-    { id: 'messages', label: 'MESSAGES' },
-    { id: 'calls', label: 'CALLS' },
-    { id: 'settings', label: 'SETTINGS' }
-  ];
-
-  const stories = [
-    { id: 's1', name: 'My story', avatar: 'M', avatarColor: 'bg-orange-500', hasStory: true, isText: true },
-    { id: 's2', name: 'VaVia', avatarImage: 'https://i.ibb.co/C5b875C6/Screenshot-20250904-050841.jpg', avatarColor: 'bg-purple-500', hasStory: true, isText: false }
-  ];
-
-  const conversations = [
-    { id: 1, name: 'Chizaram', message: "Yo! Chizaram's in", avatar: 'C', avatarColor: 'bg-green-500', day: 'Wed', unread: 1, isText: true },
-    { id: 2, name: 'VaVia', message: 'Hey, how are you doing?', avatarImage: 'https://i.ibb.co/C5b875C6/Screenshot-20250904-050841.jpg', avatarColor: 'bg-purple-500', day: 'Tue', read: true, isText: false }
-  ];
-
-  const handleConversationClick = (conversation) => setOpenChat(conversation);
-  const handleCloseChat = () => setOpenChat(null);
-
-  return (
-    <>
-      {/* Floating Action Button */}
-      <button
-        className={`fixed right-6 bottom-6 w-14 h-14 rounded-full text-white flex items-center justify-center shadow-lg hover:shadow-xl transition-all active:scale-90 active:shadow-md z-40 ${openChat ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
-        style={{ backgroundColor: '#749cbf' }}
-        aria-label={activeTab === 'calls' ? 'Start new call' : 'Add new'}
-      >
-        {activeTab === 'calls' ? (
-          <svg viewBox="0 0 20 20" className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="#ffffff">
-            <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-              <g id="Dribbble-Light-Preview" transform="translate(-180.000000, -7319.000000)" fill="#ffffff">
-                <g id="icons" transform="translate(56.000000, 160.000000)">
-                  <path d="M142.8193,7165.2034 L140.4173,7165.1794 C139.9723,7165.1794 139.7613,7164.6534 140.0763,7164.3384 L143.7073,7160.7074 C144.0973,7160.3164 144.0973,7159.6834 143.7073,7159.2934 C143.3163,7158.9024 142.6833,7158.9024 142.2933,7159.2934 L138.6603,7162.9254 C138.3453,7163.2404 137.7943,7163.0044 137.7953,7162.5594 L137.7893,7160.1734 C137.7893,7159.6214 137.3203,7159.1524 136.7673,7159.1524 C136.2153,7159.1524 135.7763,7159.6074 135.7763,7160.1604 L135.7803,7165.1664 C135.7803,7166.2694 136.6783,7167.1674 137.7823,7167.1674 C138.5613,7167.1724 137.7333,7167.1704 142.7913,7167.1764 C143.3443,7167.1764 143.8013,7166.7374 143.8013,7166.1854 C143.8013,7165.6324 143.3713,7165.2034 142.8193,7165.2034 M138.1163,7174.5784 C137.4223,7174.2044 136.7183,7173.7774 135.9913,7173.4814 C134.5873,7172.9084 134.6823,7174.6014 133.6783,7175.1514 C132.2543,7175.9314 127.6203,7171.4154 127.8293,7170.0144 C127.9913,7168.9304 129.2743,7168.8754 128.9073,7167.5504 C128.7113,7166.8404 128.3603,7166.1414 128.0973,7165.4574 C127.7443,7164.5404 127.6003,7163.9524 126.5723,7164.0034 C125.8313,7164.0394 125.3383,7164.3564 124.8823,7164.9504 C123.6493,7166.5574 123.8353,7168.7254 124.6643,7170.4884 C126.9923,7175.4384 131.7423,7178.6794 135.1573,7178.9874 C136.4533,7179.1044 138.2663,7178.4024 138.7303,7176.9964 C138.6983,7177.0944 138.6663,7177.1884 138.6513,7177.2344 C138.6633,7177.1984 138.6873,7177.1274 138.7303,7176.9954 C138.7773,7176.8544 138.8003,7176.7824 138.8113,7176.7514 C138.7973,7176.7924 138.7653,7176.8904 138.7313,7176.9924 C139.1393,7175.7524 139.1883,7175.1554 138.1163,7174.5784 M138.6513,7177.2344 C138.6393,7177.2704 138.6413,7177.2654 138.6513,7177.2344 M138.8113,7176.7514 C138.8183,7176.7274 138.8193,7176.7254 138.8113,7176.7514" id="call-[#190]"></path>
-                </g>
-              </g>
-            </g>
-          </svg>
-        ) : (
-          <span className="text-3xl font-light">+</span>
-        )}
-      </button>
-
-      <div className={`w-full max-w-md mx-auto bg-white relative transition-transform duration-300 ${openChat ? 'animate-push-left' : ''}`}>
-        {/* Search Bar */}
-        <div className="px-4 py-3 border-b border-gray-200">
-          <div className="flex items-center gap-3 bg-white rounded-full px-4 py-2 border border-gray-200">
-            <Search className="w-5 h-5 text-gray-400" />
-            <input type="text" placeholder="Search" className="bg-transparent outline-none text-gray-600 placeholder-gray-400 flex-1" />
-          </div>
-        </div>
-
-        {/* Navigation Tabs - Shadow instead of border */}
-        <div className="flex shadow-xs">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-3 text-sm font-medium transition-colors relative ${
-                activeTab === tab.id ? 'text-[#749cbf]' : 'text-gray-400 hover:text-gray-600'
-              }`}
-            >
-              {tab.label}
-              {activeTab === tab.id && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ backgroundColor: '#749cbf' }} />
-              )}
-            </button>
-          ))}
-        </div>
-
-        {/* Content Area */}
-        {activeTab === 'messages' ? (
-          <div className="relative">
-            {/* Stories Section */}
-            <div className="px-4 py-3">
-              <div className="flex gap-4 overflow-x-auto">
-                {stories.map((story) => (
-                  <div key={story.id} className="flex flex-col items-center gap-1 flex-shrink-0">
-                    <div className="relative">
-                      <div 
-                        className="p-[1.5px] rounded-full"
-                        style={{
-                          background: story.hasStory 
-                            ? 'linear-gradient(45deg, rgb(240, 148, 51) 0%, rgb(230, 104, 60) 25%, rgb(220, 39, 67) 50%, rgb(204, 35, 102) 75%, rgb(188, 24, 136) 100%)'
-                            : 'transparent'
-                        }}
-                      >
-                        <div className={`w-16 h-16 rounded-full ${story.avatarColor} flex items-center justify-center text-white text-xl font-semibold ${story.hasStory ? 'border-2 border-white' : ''} overflow-hidden`}>
-                          {story.isText ? (
-                            story.avatar
-                          ) : (
-                            <img 
-                              src={story.avatarImage} 
-                              alt={story.name}
-                              className="w-full h-full object-cover"
-                              onContextMenu={(e) => e.preventDefault()}
-                              draggable="false"
-                            />
-                          )}
-                        </div>
-                      </div>
-                      {!story.hasStory && (
-                        <div className="absolute bottom-0 right-0 w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs font-bold border-2 border-white">
-                          +
-                        </div>
-                      )}
-                    </div>
-                    <span className="text-xs text-gray-600">{story.name}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Conversations */}
-            {conversations.map((conv) => (
-              <div
-                key={conv.id}
-                onClick={() => handleConversationClick(conv)}
-                className="flex items-center gap-3 px-4 py-4 hover:bg-gray-50 cursor-pointer transition-colors relative"
-              >
-                {/* Avatar */}
-                <div className={`w-14 h-14 rounded-full ${conv.avatarColor} flex items-center justify-center text-white text-2xl font-semibold flex-shrink-0 overflow-hidden`}>
-                  {conv.isText ? (
-                    conv.avatar
-                  ) : (
-                    <img 
-                      src={conv.avatarImage} 
-                      alt={conv.name}
-                      className="w-full h-full object-cover"
-                      onContextMenu={(e) => e.preventDefault()}
-                      draggable="false"
-                    />
-                  )}
-                </div>
-
-                {/* Name & Message */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-1">
-                    {conv.name}
-                    {(conv.name === 'VaVia' || conv.name === 'Chizaram') && (
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 56 56"
-                        fill="#5ab1dc"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path d="M 23.6641 52.3985 C 26.6172 55.375 29.3594 55.3516 32.3126 52.3985 L 35.9219 48.8125 C 36.2969 48.4610 36.6250 48.3203 37.1172 48.3203 L 42.1797 48.3203 C 46.3749 48.3203 48.3204 46.3985 48.3204 42.1797 L 48.3204 37.1172 C 48.3204 36.625 48.4610 36.2969 48.8124 35.9219 L 52.3749 32.3125 C 55.3749 29.3594 55.3514 26.6172 52.3749 23.6641 L 48.8124 20.0547 C 48.4610 19.7031 48.3204 19.3516 48.3204 18.8829 L 48.3204 13.7969 C 48.3204 9.625 46.3985 7.6563 42.1797 7.6563 L 37.1172 7.6563 C 36.6250 7.6563 36.2969 7.5391 35.9219 7.1875 L 32.3126 3.6016 C 29.3594 .6250 26.6172 .6485 23.6641 3.6016 L 20.0547 7.1875 C 19.7032 7.5391 19.3516 7.6563 18.8828 7.6563 L 13.7969 7.6563 C 9.6016 7.6563 7.6563 9.5782 7.6563 13.7969 L 7.6563 18.8829 C 7.6563 19.3516 7.5391 19.7031 7.1876 20.0547 L 3.6016 23.6641 C .6251 26.6172 .6485 29.3594 3.6016 32.3125 L 7.1876 35.9219 C 7.5391 36.2969 7.6563 36.625 7.6563 37.1172 L 7.6563 42.1797 C 7.6563 46.3750 9.6016 48.3203 13.7969 48.3203 L 18.8828 48.3203 C 19.3516 48.3203 19.7032 48.4610 20.0547 48.8125 Z M 24.0391 39.7891 C 23.3126 39.7891 22.8438 39.5547 22.4923 39.1563 L 14.6641 30.4609 C 14.3360 30.0860 14.1485 29.6172 14.1485 29.125 C 14.1485 28.0234 14.9923 27.2031 16.1876 27.2031 C 16.8204 27.2031 17.2891 27.4141 17.7110 27.8594 L 23.9219 34.7266 L 35.9923 17.7344 C 36.4610 17.0547 36.9297 16.7734 37.7501 16.7734 C 38.8985 16.7734 39.7188 17.6172 39.7188 18.7188 C 39.7188 19.1172 39.5547 19.5860 39.2969 19.9609 L 25.6328 39.0625 C 25.2813 39.5078 24.7423 39.7891 24.0391 39.7891 Z"></path>
-                      </svg>
-                    )}
-                  </h3>
-                  <p className="text-sm text-gray-400 truncate">{conv.message}</p>
-                </div>
-
-                {/* Day + Badge or Checkmark */}
-                <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                  <span className="text-gray-400 text-xs">{conv.day}</span>
-                  {conv.unread > 0 ? (
-                    <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-medium" style={{ backgroundColor: '#749cbf' }}>
-                      {conv.unread}
-                    </div>
-                  ) : conv.read ? (
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-5 h-5"
-                    >
-                      <g clipPath="url(#clip0_949_23339)">
-                        <path
-                          d="M17.5821 6.95711C17.9726 6.56658 17.9726 5.93342 17.5821 5.54289C17.1916 5.15237 16.5584 5.15237 16.1679 5.54289L5.54545 16.1653L1.70711 12.327C1.31658 11.9365 0.683417 11.9365 0.292893 12.327C-0.0976311 12.7175 -0.097631 13.3507 0.292893 13.7412L4.83835 18.2866C5.22887 18.6772 5.86204 18.6772 6.25256 18.2866L17.5821 6.95711Z"
-                          fill="#749cbf"
-                        />
-                        <path
-                          d="M23.5821 6.95711C23.9726 6.56658 23.9726 5.93342 23.5821 5.54289C23.1915 5.15237 22.5584 5.15237 22.1678 5.54289L10.8383 16.8724C10.4478 17.263 10.4478 17.8961 10.8383 18.2866C11.2288 18.6772 11.862 18.6772 12.2525 18.2866L23.5821 6.95711Z"
-                          fill="#749cbf"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_949_23339">
-                          <rect width="24" height="24" fill="white" />
-                        </clipPath>
-                      </defs>
-                    </svg>
-                  ) : null}
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : activeTab === 'calls' ? (
-          <div>
-            <div className="p-4 bg-white">
-              <div className="flex items-center gap-3">
-                <svg className="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  <line x1="18" y1="6" x2="18" y2="6" strokeWidth={1.5} strokeLinecap="round" />
-                  <line x1="15" y1="6" x2="21" y2="6" strokeWidth={1.5} strokeLinecap="round" />
-                  <line x1="18" y1="3" x2="18" y2="9" strokeWidth={1.5} strokeLinecap="round" />
-                </svg>
-                <h2 className="text-lg font-normal text-blue-500">Start New Call</h2>
-              </div>
-            </div>
-            <div className="px-4 py-3 bg-gray-50">
-              <p className="text-gray-500 text-sm">You can add up to 200 participants to a call.</p>
-            </div>
-          </div>
-        ) : null}
-      </div>
-
-      {openChat && <Chat conversation={openChat} onClose={handleCloseChat} />}
-    </>
-  );
-}
-
-// Custom Styles
-const chatStyle = document.createElement('style');
-chatStyle.textContent = `
-  @keyframes slide-in-right { from { transform: translateX(100%); } to { transform: translateX(0); } }
-  .animate-slide-in-right { animation: slide-in-right 0.3s ease-out forwards; }
-  @keyframes slide-out-right { from { transform: translateX(0); } to { transform: translateX(100%); } }
-  .animate-slide-out-right { animation: slide-out-right 0.3s ease-in forwards; }
-  @keyframes push-left { from { transform: translateX(0); } to { transform: translateX(-100%); } }
-  .animate-push-left { animation: push-left 0.3s ease-out forwards; }
-
-  .shadow-xs {
-    box-shadow: -14px 1px 14px 5px rgba(0, 0, 0, 0.05);
-  }
-
-  body { user-select: none; }
-  img { pointer-events: none; user-drag: none; }
-`;
-document.head.appendChild(chatStyle);
-
-// Render
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<MessagingHeader />);
+    
