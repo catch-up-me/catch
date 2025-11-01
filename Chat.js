@@ -1,5 +1,3 @@
-
-
 const { useState } = React;
 
 function Chat({ conversation, onClose }) {
@@ -162,7 +160,7 @@ function Chat({ conversation, onClose }) {
                 clipPath: 'polygon(0 100%, 100% 100%, 100% 0)'
               }}></div>
               <div className="text-black text-base mb-0.5">Mykee Blogger</div>
-              <div className="text-xs text-right mt-1" style={{ color: '#667781', marginLeft: '40px' }}>Tue 10:40 AM</div>
+              <div className="text-xs text-right mt-1" style={{ color: '#667781', marginLeft: '60px' }}>Tue 10:40 AM</div>
             </div>
           </div>
 
@@ -280,7 +278,7 @@ function Chat({ conversation, onClose }) {
                 clipPath: 'polygon(0 100%, 100% 100%, 100% 0)'
               }}></div>
               <div className="text-black text-base mb-0.5">Messiah</div>
-              <div className="text-xs text-right mt-1" style={{ color: '#667781', marginLeft: '40px' }}>Fri 10:58 AM</div>
+              <div className="text-xs text-right mt-1" style={{ color: '#667781', marginLeft: '60px' }}>Fri 10:58 AM</div>
             </div>
           </div>
         </div>
