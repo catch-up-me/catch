@@ -1,4 +1,5 @@
 
+
 const { useState } = React;
 
 function Chat({ conversation, onClose }) {
@@ -61,17 +62,71 @@ function Chat({ conversation, onClose }) {
           </div>
         </div>
 
-        <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-          <svg
-            className="w-6 h-6 text-gray-600"
-            fill="currentColor"
-            viewBox="0 0 24 24"
+        <div className="relative">
+          <button 
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            onClick={() => setShowMenu(!showMenu)}
           >
-            <circle cx="12" cy="5" r="2" />
-            <circle cx="12" cy="12" r="2" />
-            <circle cx="12" cy="19" r="2" />
-          </svg>
-        </button>
+            <svg
+              className="w-6 h-6 text-gray-600"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="12" cy="5" r="2" />
+              <circle cx="12" cy="12" r="2" />
+              <circle cx="12" cy="19" r="2" />
+            </svg>
+          </button>
+
+          {showMenu && (
+            <>
+              <div 
+                className="fixed inset-0 z-40" 
+                onClick={() => setShowMenu(false)}
+              ></div>
+              <div className="absolute right-0 top-12 w-56 bg-white rounded-lg shadow-lg z-50 py-2">
+                <button className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left">
+                  <svg className="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16.6725 16.6412L21 21M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <span className="text-gray-800 text-base">Search</span>
+                </button>
+
+                <button className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left">
+                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/>
+                  </svg>
+                  <span className="text-gray-800 text-base">Mute</span>
+                </button>
+
+                <button className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left">
+                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 11h4M19 9v4"/>
+                  </svg>
+                  <span className="text-gray-800 text-base">Add to contacts</span>
+                </button>
+
+                <button className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left">
+                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <rect x="5" y="11" width="14" height="10" rx="2" ry="2"/>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 17a1 1 0 100-2 1 1 0 000 2z"/>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 11V7a4 4 0 118 0v4"/>
+                  </svg>
+                  <span className="text-gray-800 text-base">Block user</span>
+                </button>
+
+                <button className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left">
+                  <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                  <span className="text-red-500 text-base">Delete Chat</span>
+                </button>
+              </div>
+            </>
+          )}
+        </div>
       </header>
 
       <main className="flex-1 bg-white overflow-y-auto" style={{ 
