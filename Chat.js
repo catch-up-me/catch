@@ -1,7 +1,3 @@
-
-
-
-
 const { useState } = React;
 
 function Chat({ conversation, onClose }) {
@@ -146,7 +142,7 @@ function Chat({ conversation, onClose }) {
           </div>
 
           <div className="flex justify-start mb-2" style={{ animation: 'slideIn 0.3s ease-out' }}>
-            <div className="relative max-w-[65%] bg-white rounded-lg p-2 px-3" style={{ boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)' }}>
+            <div className="relative max-w-[75%] bg-white rounded-lg p-2 px-3" style={{ boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)' }}>
               <div className="absolute bg-white" style={{ 
                 left: '-8px', 
                 top: '0', 
@@ -163,8 +159,8 @@ function Chat({ conversation, onClose }) {
                 borderRadius: '0 20px 0 0',
                 clipPath: 'polygon(0 100%, 100% 100%, 100% 0)'
               }}></div>
-              <div className="text-black text-base mb-1">Mykee Blogger</div>
-              <div className="text-xs text-right" style={{ color: '#667781' }}>Tue 10:40 AM</div>
+              <div className="text-black text-base">Mykee Blogger</div>
+              <div className="text-xs text-right mt-1" style={{ color: '#667781' }}>Tue 10:40 AM</div>
             </div>
           </div>
 
@@ -224,7 +220,7 @@ function Chat({ conversation, onClose }) {
                 style={{ width: '100%', maxWidth: '250px', height: '260px', objectFit: 'cover' }}
                 onClick={() => setSelectedImage({ src: 'https://i.ibb.co/C5b875C6/Screenshot-20250904-050841.jpg', sender: 'Mykee', time: '08:52 PM' })}
               />
-              <div className="text-xs text-right flex items-center justify-end gap-1" style={{ color: '#667781' }}>
+              <div className="text-xs text-right flex items-center justify-end gap-1 mt-1" style={{ color: '#667781' }}>
                 Wed 08:52 PM
                 <svg viewBox="0 0 16 15" width="16" height="15" fill="#53bdeb">
                   <path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.88a.32.32 0 0 1-.484.032l-.358-.325a.32.32 0 0 0-.484.032l-.378.48a.418.418 0 0 0 .036.54l1.32 1.267a.32.32 0 0 0 .484-.034l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.88a.32.32 0 0 1-.484.032L1.892 7.77a.366.366 0 0 0-.516.005l-.423.433a.364.364 0 0 0 .006.514l3.255 3.185a.32.32 0 0 0 .484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"/>
@@ -234,7 +230,7 @@ function Chat({ conversation, onClose }) {
           </div>
 
           <div className="flex justify-end mb-2" style={{ animation: 'slideIn 0.3s ease-out' }}>
-            <div className="relative max-w-[65%] rounded-lg p-2 px-3" style={{ backgroundColor: '#d9fdd3', boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)' }}>
+            <div className="relative max-w-[75%] rounded-lg p-2 px-3" style={{ backgroundColor: '#d9fdd3', boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)' }}>
               <div className="absolute" style={{ 
                 backgroundColor: '#d9fdd3',
                 right: '-8px', 
@@ -253,8 +249,8 @@ function Chat({ conversation, onClose }) {
                 borderRadius: '20px 0 0 0',
                 clipPath: 'polygon(0 0, 100% 100%, 0 100%)'
               }}></div>
-              <div className="text-black text-base mb-1">Who be this</div>
-              <div className="text-xs text-right flex items-center justify-end gap-1" style={{ color: '#667781' }}>
+              <div className="text-black text-base">Who be this</div>
+              <div className="text-xs text-right flex items-center justify-end gap-1 mt-1" style={{ color: '#667781' }}>
                 Thu 10:56 AM
                 <svg viewBox="0 0 16 15" width="16" height="15" fill="#53bdeb">
                   <path d="M15.01 3.316l-.478-.372a.365.365 0 0 0-.51.063L8.666 9.88a.32.32 0 0 1-.484.032l-.358-.325a.32.32 0 0 0-.484.032l-.378.48a.418.418 0 0 0 .036.54l1.32 1.267a.32.32 0 0 0 .484-.034l6.272-8.048a.366.366 0 0 0-.064-.512zm-4.1 0l-.478-.372a.365.365 0 0 0-.51.063L4.566 9.88a.32.32 0 0 1-.484.032L1.892 7.77a.366.366 0 0 0-.516.005l-.423.433a.364.364 0 0 0 .006.514l3.255 3.185a.32.32 0 0 0 .484-.033l6.272-8.048a.365.365 0 0 0-.063-.51z"/>
@@ -264,7 +260,7 @@ function Chat({ conversation, onClose }) {
           </div>
 
           <div className="flex justify-start mb-2" style={{ animation: 'slideIn 0.3s ease-out' }}>
-            <div className="relative max-w-[65%] bg-white rounded-lg p-2 px-3" style={{ boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)' }}>
+            <div className="relative max-w-[75%] bg-white rounded-lg p-2 px-3" style={{ boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)' }}>
               <div className="absolute bg-white" style={{ 
                 left: '-8px', 
                 top: '0', 
@@ -281,8 +277,8 @@ function Chat({ conversation, onClose }) {
                 borderRadius: '0 20px 0 0',
                 clipPath: 'polygon(0 100%, 100% 100%, 100% 0)'
               }}></div>
-              <div className="text-black text-base mb-1">Messiah</div>
-              <div className="text-xs text-right" style={{ color: '#667781' }}>Fri 10:58 AM</div>
+              <div className="text-black text-base">Messiah</div>
+              <div className="text-xs text-right mt-1" style={{ color: '#667781' }}>Fri 10:58 AM</div>
             </div>
           </div>
         </div>
