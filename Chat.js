@@ -1,5 +1,3 @@
-
-
 const { useState } = React;
 
 function Chat({ conversation, onClose }) {
