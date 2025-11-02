@@ -265,11 +265,14 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
     const diffX = Math.abs(touchStart - currentTouchX);
     const diffY = Math.abs(touchStartY - currentTouchY);
     
-    if (!isVerticalSwipe && diffY > diffX && diffY > 10) {
+    // Increased threshold to 30px for better swipe detection
+    if (!isVerticalSwipe && diffY > diffX && diffY > 30) {
       setIsVerticalSwipe(true);
     }
     
     if (isVerticalSwipe) {
+      // Prevent browser refresh when swiping down
+      e.preventDefault();
       const verticalDiff = currentTouchY - touchStartY;
       if (verticalDiff > 0) {
         setTranslateY(verticalDiff);
@@ -386,6 +389,7 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
         onClick={() => setControlsVisible(!controlsVisible)}
+        style={{ touchAction: 'none' }}
       >
         <div 
           className="flex transition-transform w-full h-full"
@@ -403,8 +407,13 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
               <img 
                 src={img.src} 
                 alt={img.caption}
-                className="max-w-full max-h-full object-contain"
-                style={{ pointerEvents: 'none' }}
+                className="object-contain"
+                style={{ 
+                  pointerEvents: 'none',
+                  width: '100%',
+                  height: 'auto',
+                  maxHeight: '100vh'
+                }}
               />
             </div>
           ))}
