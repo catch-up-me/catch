@@ -1,27 +1,52 @@
-const { useState } = React;
+const { useState, useRef } = React;
 
-// Image Viewer Component
+// Image Viewer Component with Zoom
 function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
   const [index, setIndex] = useState(currentIndex);
   const [showMenu, setShowMenu] = useState(false);
   const [controlsVisible, setControlsVisible] = useState(true);
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
-  const [touchStartY, setTouchStartY] = useState(0);
-  const [touchEndY, setTouchEndY] = useState(0);
-  const [translateX, setTranslateX] = useState(0);
-  const [translateY, setTranslateY] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [isVerticalSwipe, setIsVerticalSwipe] = useState(false);
+  
+  // Zoom states
+  const [scale, setScale] = useState(1);
+  const [posX, setPosX] = useState(0);
+  const [posY, setPosY] = useState(0);
+  
+  // Refs for touch handling
+  const lastTap = useRef(0);
+  const initialPinchDistance = useRef(0);
+  const initialScale = useRef(1);
+  const lastPosX = useRef(0);
+  const lastPosY = useRef(0);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+  const isPanning = useRef(false);
+  const isPinching = useRef(false);
+  const isSwipingVertical = useRef(false);
+  const isSwipingHorizontal = useRef(false);
+  const verticalSwipeOffset = useRef(0);
+  const horizontalSwipeOffset = useRef(0);
 
-  const minSwipeDistance = 50;
-  const minVerticalSwipeDistance = 150;
+  const minScale = 1;
+  const maxScale = 4;
+
+  const getDistance = (touch1, touch2) => {
+    const dx = touch1.clientX - touch2.clientX;
+    const dy = touch1.clientY - touch2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+
+  const resetZoom = () => {
+    setScale(1);
+    setPosX(0);
+    setPosY(0);
+  };
 
   const nextImage = () => {
     if (index < images.length - 1) {
       const newIndex = index + 1;
       setIndex(newIndex);
       onIndexChange(newIndex);
+      resetZoom();
     }
   };
 
@@ -30,70 +55,129 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
       const newIndex = index - 1;
       setIndex(newIndex);
       onIndexChange(newIndex);
+      resetZoom();
     }
   };
 
-  const onTouchStart = (e) => {
-    setTouchEnd(0);
-    setTouchEndY(0);
-    setTouchStart(e.targetTouches[0].clientX);
-    setTouchStartY(e.targetTouches[0].clientY);
-    setIsDragging(true);
-    setIsVerticalSwipe(false);
+  const handleTouchStart = (e) => {
+    const touches = e.touches;
+
+    if (touches.length === 2) {
+      // Start pinch zoom
+      isPinching.current = true;
+      initialPinchDistance.current = getDistance(touches[0], touches[1]);
+      initialScale.current = scale;
+      lastPosX.current = posX;
+      lastPosY.current = posY;
+    } else if (touches.length === 1) {
+      touchStartX.current = touches[0].clientX;
+      touchStartY.current = touches[0].clientY;
+      lastPosX.current = posX;
+      lastPosY.current = posY;
+
+      if (scale > 1) {
+        isPanning.current = true;
+      }
+    }
   };
 
-  const onTouchMove = (e) => {
-    const currentTouchX = e.targetTouches[0].clientX;
-    const currentTouchY = e.targetTouches[0].clientY;
-    setTouchEnd(currentTouchX);
-    setTouchEndY(currentTouchY);
-    
-    const diffX = Math.abs(touchStart - currentTouchX);
-    const diffY = Math.abs(touchStartY - currentTouchY);
-    
-    if (!isVerticalSwipe && diffY > diffX && diffY > 30) {
-      setIsVerticalSwipe(true);
-    }
-    
-    if (isVerticalSwipe) {
+  const handleTouchMove = (e) => {
+    const touches = e.touches;
+
+    if (touches.length === 2 && isPinching.current) {
+      // Pinch zoom
       e.preventDefault();
-      const verticalDiff = currentTouchY - touchStartY;
-      if (verticalDiff > 0) {
-        setTranslateY(verticalDiff);
+      const currentDistance = getDistance(touches[0], touches[1]);
+      const scaleChange = currentDistance / initialPinchDistance.current;
+      let newScale = initialScale.current * scaleChange;
+
+      newScale = Math.max(minScale, Math.min(maxScale, newScale));
+      setScale(newScale);
+
+    } else if (touches.length === 1) {
+      const currentX = touches[0].clientX;
+      const currentY = touches[0].clientY;
+      const deltaX = currentX - touchStartX.current;
+      const deltaY = currentY - touchStartY.current;
+
+      if (scale > 1 && isPanning.current) {
+        // Pan when zoomed
+        e.preventDefault();
+        setPosX(lastPosX.current + deltaX);
+        setPosY(lastPosY.current + deltaY);
+      } else if (scale === 1) {
+        // Determine swipe direction
+        const absX = Math.abs(deltaX);
+        const absY = Math.abs(deltaY);
+
+        if (!isSwipingVertical.current && !isSwipingHorizontal.current) {
+          if (absY > 30 && absY > absX) {
+            isSwipingVertical.current = true;
+          } else if (absX > 30 && absX > absY) {
+            isSwipingHorizontal.current = true;
+          }
+        }
+
+        if (isSwipingVertical.current && deltaY > 0) {
+          e.preventDefault();
+          verticalSwipeOffset.current = deltaY;
+        } else if (isSwipingHorizontal.current) {
+          horizontalSwipeOffset.current = deltaX;
+        }
       }
-    } else {
-      const horizontalDiff = touchStart - currentTouchX;
-      setTranslateX(-horizontalDiff);
     }
   };
 
-  const onTouchEnd = () => {
-    setIsDragging(false);
-    
-    if (isVerticalSwipe) {
-      const verticalDistance = touchEndY - touchStartY;
-      
-      if (verticalDistance > minVerticalSwipeDistance) {
-        onClose();
-      } else {
-        setTranslateY(0);
+  const handleTouchEnd = (e) => {
+    if (isPinching.current) {
+      isPinching.current = false;
+      if (scale < 1.1) {
+        resetZoom();
       }
-      
-      setIsVerticalSwipe(false);
-    } else {
-      setTranslateX(0);
-      
-      if (!touchStart || !touchEnd) return;
-      
-      const distance = touchStart - touchEnd;
-      const isLeftSwipe = distance > minSwipeDistance;
-      const isRightSwipe = distance < -minSwipeDistance;
-
-      if (isLeftSwipe) {
+    } else if (isPanning.current) {
+      isPanning.current = false;
+    } else if (isSwipingVertical.current) {
+      if (verticalSwipeOffset.current > 150) {
+        onClose();
+      }
+      isSwipingVertical.current = false;
+      verticalSwipeOffset.current = 0;
+    } else if (isSwipingHorizontal.current) {
+      const threshold = 50;
+      if (horizontalSwipeOffset.current < -threshold) {
         nextImage();
-      } else if (isRightSwipe) {
+      } else if (horizontalSwipeOffset.current > threshold) {
         prevImage();
       }
+      isSwipingHorizontal.current = false;
+      horizontalSwipeOffset.current = 0;
+    } else {
+      // Handle single tap / double tap
+      const currentTime = Date.now();
+      const tapGap = currentTime - lastTap.current;
+
+      if (tapGap < 300 && tapGap > 0) {
+        // Double tap detected
+        if (scale === 1) {
+          const touch = e.changedTouches[0];
+          const rect = e.currentTarget.getBoundingClientRect();
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const touchX = touch.clientX - rect.left;
+          const touchY = touch.clientY - rect.top;
+
+          setScale(2.5);
+          setPosX((centerX - touchX) * 1.5);
+          setPosY((centerY - touchY) * 1.5);
+        } else {
+          resetZoom();
+        }
+      } else {
+        // Single tap - toggle controls
+        setControlsVisible(!controlsVisible);
+      }
+
+      lastTap.current = currentTime;
     }
   };
 
@@ -101,13 +185,12 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
 
   return (
     <div 
-      className="fixed inset-0 bg-black z-[100] flex flex-col transition-transform"
+      className="fixed inset-0 bg-black z-[100] flex flex-col"
       style={{ 
-        userSelect: 'none', 
-        WebkitTapHighlightColor: 'transparent',
-        transform: `translateY(${translateY}px)`,
-        transitionDuration: isDragging ? '0ms' : '300ms',
-        opacity: translateY > 0 ? Math.max(0.3, 1 - (translateY / 400)) : 1
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
+        WebkitTouchCallout: 'none',
+        WebkitTapHighlightColor: 'transparent'
       }}
     >
       <div 
@@ -115,7 +198,8 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
         style={{ 
           backgroundColor: 'rgba(0, 0, 0, 0.9)',
           backdropFilter: 'blur(10px)',
-          opacity: controlsVisible ? 1 : 0
+          opacity: controlsVisible ? 1 : 0,
+          pointerEvents: controlsVisible ? 'auto' : 'none'
         }}
       >
         <div className="flex items-center gap-3">
@@ -168,35 +252,44 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
       </div>
 
       <div 
-        className="flex-1 flex items-center justify-center overflow-hidden"
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-        onClick={() => setControlsVisible(!controlsVisible)}
-        style={{ touchAction: 'none' }}
+        className="flex-1 flex items-center justify-center overflow-hidden relative"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        style={{ 
+          touchAction: 'none',
+          transform: isSwipingVertical.current ? `translateY(${verticalSwipeOffset.current}px)` : 'none',
+          opacity: verticalSwipeOffset.current > 0 ? Math.max(0.3, 1 - (verticalSwipeOffset.current / 400)) : 1
+        }}
       >
         <div 
-          className="flex transition-transform w-full h-full"
-          style={{ 
-            transform: isDragging ? `translateX(calc(-${index * 100}% + ${translateX}px))` : `translateX(-${index * 100}%)`,
-            transitionDuration: isDragging ? '0ms' : '300ms'
+          className="absolute inset-0 flex"
+          style={{
+            transform: scale === 1 ? `translateX(calc(-${index * 100}% + ${isSwipingHorizontal.current ? horizontalSwipeOffset.current : 0}px))` : 'none',
+            transition: isSwipingHorizontal.current || isPinching.current || isPanning.current ? 'none' : 'transform 0.3s ease-out'
           }}
         >
           {images.map((img, idx) => (
-            <div 
+            <div
               key={idx}
               className="flex-shrink-0 w-full h-full flex items-center justify-center"
-              style={{ minWidth: '100%' }}
+              style={{ 
+                minWidth: '100%',
+                visibility: scale > 1 ? (idx === index ? 'visible' : 'hidden') : 'visible'
+              }}
             >
               <img 
                 src={img.src} 
                 alt={img.caption}
-                className="object-contain"
+                draggable="false"
                 style={{ 
                   pointerEvents: 'none',
                   width: '100%',
-                  height: 'auto',
-                  maxHeight: '100vh'
+                  height: '100%',
+                  objectFit: 'contain',
+                  transform: `scale(${scale}) translate(${posX / scale}px, ${posY / scale}px)`,
+                  transition: isPinching.current || isPanning.current ? 'none' : 'transform 0.2s ease-out',
+                  transformOrigin: 'center center'
                 }}
               />
             </div>
@@ -209,7 +302,8 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
         style={{ 
           backgroundColor: 'rgba(0, 0, 0, 0.9)',
           backdropFilter: 'blur(10px)',
-          opacity: controlsVisible ? 1 : 0
+          opacity: controlsVisible ? 1 : 0,
+          pointerEvents: controlsVisible ? 'auto' : 'none'
         }}
       >
         <div className="text-gray-300 text-sm flex-1 mr-4 overflow-hidden text-ellipsis whitespace-nowrap">
