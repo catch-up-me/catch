@@ -61,7 +61,7 @@ function SentMessage({ id, content, time, isImage, imageSrc, swipedMessageId, sw
           transform: `translateX(${displayOffset}px)`,
           transition: isDragging ? 'none' : 'transform 0.3s ease-out',
           maxWidth: isImage ? 'fit-content' : '75%',
-          padding: isImage ? '8px 6px 6px 6px' : '6px 8px 4px 8px', // Reduced vertical padding for text
+          padding: isImage ? '8px 6px 6px 6px' : '6px 8px 4px 8px', // Reduced vertical padding
           zIndex: 1
         }}
       >
@@ -171,7 +171,7 @@ function ReceivedMessage({ id, content, time, isImage, imageSrc, swipedMessageId
           transform: `translateX(${displayOffset}px)`,
           transition: isDragging ? 'none' : 'transform 0.3s ease-out',
           maxWidth: isImage ? 'fit-content' : '75%',
-          padding: isImage ? '8px 6px 6px 6px' : '6px 8px 4px 8px', // Reduced vertical padding for text
+          padding: isImage ? '8px 6px 6px 6px' : '6px 8px 4px 8px', // Reduced vertical padding
           zIndex: 1
         }}
       >
@@ -437,7 +437,7 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
   );
 }
 
-// Chat Component (Unchanged except message rendering)
+// Chat Component – with updated date bubble padding
 function Chat({ conversation, onClose }) {
   const [isClosing, setIsClosing] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -562,8 +562,17 @@ function Chat({ conversation, onClose }) {
         backgroundColor: 'transparent'
       }}>
         <div className="max-w-3xl mx-auto px-5 py-5">
+          {/* DATE BUBBLE – increased vertical padding */}
           <div className="text-center my-3">
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#d9d9d9', color: '#666' }}>
+            <span 
+              className="inline-block px-3 rounded-full text-xs font-medium"
+              style={{ 
+                backgroundColor: '#d9d9d9', 
+                color: '#666',
+                paddingTop: '6px',
+                paddingBottom: '6px'
+              }}
+            >
               May 30
             </span>
           </div>
