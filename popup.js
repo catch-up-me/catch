@@ -136,6 +136,18 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
       }
     } else if (isPanning.current) {
       isPanning.current = false;
+      
+      // Check for double tap even when panning (for zoomed state)
+      const currentTime = Date.now();
+      const tapGap = currentTime - lastTap.current;
+      
+      if (tapGap < 300 && tapGap > 0) {
+        // Double tap detected while zoomed - reset
+        resetZoom();
+        lastTap.current = 0; // Reset to prevent triple tap issues
+      } else {
+        lastTap.current = currentTime;
+      }
     } else if (isSwipingVertical.current) {
       if (verticalSwipeOffset.current > 150) {
         onClose();
@@ -172,12 +184,12 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
         } else {
           resetZoom();
         }
+        lastTap.current = 0; // Reset to prevent triple tap issues
       } else {
         // Single tap - toggle controls
         setControlsVisible(!controlsVisible);
+        lastTap.current = currentTime;
       }
-
-      lastTap.current = currentTime;
     }
   };
 
