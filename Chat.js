@@ -1,6 +1,6 @@
 const { useState } = React;
 
-// Sent Message Component with Swipe (FIXED: Less sensitive, no scroll interference)
+// Sent Message Component – FIXED: Bounces back after swipe
 function SentMessage({ id, content, time, isImage, imageSrc, swipedMessageId, swipeOffset, onSwipe, onResetSwipe, onImageClick }) {
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchStartY, setTouchStartY] = useState(0);
@@ -12,7 +12,7 @@ function SentMessage({ id, content, time, isImage, imageSrc, swipedMessageId, sw
     setTouchStartX(touch.clientX);
     setTouchStartY(touch.clientY);
     setIsDragging(true);
-    onResetSwipe();
+    onResetSwipe(); // Reset any previous lock
   };
 
   const handleTouchMove = (e) => {
@@ -22,31 +22,35 @@ function SentMessage({ id, content, time, isImage, imageSrc, swipedMessageId, sw
     const diffX = touch.clientX - touchStartX;
     const diffY = Math.abs(touch.clientY - touchStartY);
 
-    // If vertical movement dominates → allow scroll, cancel swipe
+    // Cancel swipe if scrolling vertically
     if (diffY > Math.abs(diffX) && diffY > 10) {
       setIsDragging(false);
       return;
     }
 
-    // Only allow right swipe after 15px threshold
     if (diffX > 15 && diffX <= 80) {
       setCurrentOffset(diffX);
-      e.preventDefault(); // Prevent scroll only during horizontal swipe
+      e.preventDefault();
     }
   };
 
   const handleTouchEnd = () => {
-    if (isDragging && currentOffset > 50) {
+    if (!isDragging) return;
+
+    const swipedFarEnough = currentOffset > 50;
+
+    if (swipedFarEnough) {
+      setCurrentOffset(80);
       onSwipe(id, touchStartX, touchStartX + currentOffset);
-    }
-    setIsDragging(false);
-    setTimeout(() => {
+    } else {
       setCurrentOffset(0);
-    }, 200);
+    }
+
+    setIsDragging(false);
   };
 
-  const isThisMessageSwiped = swipedMessageId === id;
-  const displayOffset = isDragging ? currentOffset : (isThisMessageSwiped ? 80 : 0);
+  const isLocked = swipedMessageId === id;
+  const displayOffset = isDragging ? currentOffset : (isLocked ? 80 : 0);
 
   return (
     <div 
@@ -75,7 +79,7 @@ function SentMessage({ id, content, time, isImage, imageSrc, swipedMessageId, sw
           backgroundColor: '#d9fdd3',
           boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
           transform: `translateX(${displayOffset}px)`,
-          transition: isDragging ? 'none' : 'transform 0.3s ease-out',
+          transition: isDragging ? 'none' : 'transform 0.25s cubic-bezier(0.2, 0.8, 0.4, 1)',
           maxWidth: isImage ? 'fit-content' : '75%',
           padding: isImage ? '8px 6px 6px 6px' : '6px 8px 4px 8px',
           zIndex: 1
@@ -122,7 +126,7 @@ function SentMessage({ id, content, time, isImage, imageSrc, swipedMessageId, sw
   );
 }
 
-// Received Message Component with Swipe (FIXED: Less sensitive)
+// Received Message Component – FIXED: Bounces back
 function ReceivedMessage({ id, content, time, isImage, imageSrc, swipedMessageId, swipeOffset, onSwipe, onResetSwipe, onImageClick }) {
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchStartY, setTouchStartY] = useState(0);
@@ -156,17 +160,22 @@ function ReceivedMessage({ id, content, time, isImage, imageSrc, swipedMessageId
   };
 
   const handleTouchEnd = () => {
-    if (isDragging && currentOffset > 50) {
+    if (!isDragging) return;
+
+    const swipedFarEnough = currentOffset > 50;
+
+    if (swipedFarEnough) {
+      setCurrentOffset(80);
       onSwipe(id, touchStartX, touchStartX + currentOffset);
-    }
-    setIsDragging(false);
-    setTimeout(() => {
+    } else {
       setCurrentOffset(0);
-    }, 200);
+    }
+
+    setIsDragging(false);
   };
 
-  const isThisMessageSwiped = swipedMessageId === id;
-  const displayOffset = isDragging ? currentOffset : (isThisMessageSwiped ? 80 : 0);
+  const isLocked = swipedMessageId === id;
+  const displayOffset = isDragging ? currentOffset : (isLocked ? 80 : 0);
 
   return (
     <div 
@@ -193,7 +202,7 @@ function ReceivedMessage({ id, content, time, isImage, imageSrc, swipedMessageId
         style={{ 
           boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
           transform: `translateX(${displayOffset}px)`,
-          transition: isDragging ? 'none' : 'transform 0.3s ease-out',
+          transition: isDragging ? 'none' : 'transform 0.25s cubic-bezier(0.2, 0.8, 0.4, 1)',
           maxWidth: isImage ? 'fit-content' : '75%',
           padding: isImage ? '8px 6px 6px 6px' : '6px 8px 4px 8px',
           zIndex: 1
@@ -226,7 +235,7 @@ function ReceivedMessage({ id, content, time, isImage, imageSrc, swipedMessageId
             <div className="text-black text-base mb-0" style={{ lineHeight: '1.3' }}>{content}</div>
             <div className="text-xs text-right" style={{ color: '#667781', marginLeft: '48px', marginTop: '-2px' }}>{time}</div>
           </>
-        )}
+da        )}
       </div>
     </div>
   );
