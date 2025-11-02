@@ -1,31 +1,47 @@
 const { useState } = React;
 
-// Sent Message Component with Swipe
+// Sent Message Component with Swipe (FIXED: Less sensitive, no scroll interference)
 function SentMessage({ id, content, time, isImage, imageSrc, swipedMessageId, swipeOffset, onSwipe, onResetSwipe, onImageClick }) {
   const [touchStartX, setTouchStartX] = useState(0);
+  const [touchStartY, setTouchStartY] = useState(0);
   const [currentOffset, setCurrentOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
 
   const handleTouchStart = (e) => {
-    setTouchStartX(e.touches[0].clientX);
+    const touch = e.touches[0];
+    setTouchStartX(touch.clientX);
+    setTouchStartY(touch.clientY);
     setIsDragging(true);
     onResetSwipe();
   };
 
   const handleTouchMove = (e) => {
     if (!isDragging) return;
-    const touchX = e.touches[0].clientX;
-    const offset = touchX - touchStartX;
-    if (offset > 0 && offset <= 80) {
-      setCurrentOffset(offset);
+
+    const touch = e.touches[0];
+    const diffX = touch.clientX - touchStartX;
+    const diffY = Math.abs(touch.clientY - touchStartY);
+
+    // If vertical movement dominates → allow scroll, cancel swipe
+    if (diffY > Math.abs(diffX) && diffY > 10) {
+      setIsDragging(false);
+      return;
+    }
+
+    // Only allow right swipe after 15px threshold
+    if (diffX > 15 && diffX <= 80) {
+      setCurrentOffset(diffX);
+      e.preventDefault(); // Prevent scroll only during horizontal swipe
     }
   };
 
   const handleTouchEnd = () => {
+    if (isDragging && currentOffset > 50) {
+      onSwipe(id, touchStartX, touchStartX + currentOffset);
+    }
     setIsDragging(false);
     setTimeout(() => {
       setCurrentOffset(0);
-      onResetSwipe();
     }, 200);
   };
 
@@ -35,7 +51,7 @@ function SentMessage({ id, content, time, isImage, imageSrc, swipedMessageId, sw
   return (
     <div 
       className="flex justify-end mb-2 relative"
-      style={{ animation: 'slideIn 0.3s ease-out', touchAction: 'pan-y' }}
+      style={{ animation: 'slideIn 0.3s ease-out' }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -61,25 +77,19 @@ function SentMessage({ id, content, time, isImage, imageSrc, swipedMessageId, sw
           transform: `translateX(${displayOffset}px)`,
           transition: isDragging ? 'none' : 'transform 0.3s ease-out',
           maxWidth: isImage ? 'fit-content' : '75%',
-          padding: isImage ? '8px 6px 6px 6px' : '6px 8px 4px 8px', // Reduced for text only
+          padding: isImage ? '8px 6px 6px 6px' : '6px 8px 4px 8px',
           zIndex: 1
         }}
       >
         <div className="absolute" style={{ 
           backgroundColor: '#d9fdd3',
-          right: '-8px', 
-          top: '0', 
-          width: '20px', 
-          height: '20px',
+          right: '-8px', top: '0', width: '20px', height: '20px',
           borderRadius: '0 0 0 20px',
           clipPath: 'polygon(0 0, 100% 0, 0 100%)'
         }}></div>
         <div className="absolute" style={{ 
           backgroundColor: '#d9fdd3',
-          right: '-8px', 
-          bottom: '0', 
-          width: '20px', 
-          height: '20px',
+          right: '-8px', bottom: '0', width: '20px', height: '20px',
           borderRadius: '20px 0 0 0',
           clipPath: 'polygon(0 0, 100% 100%, 0 100%)'
         }}></div>
@@ -112,32 +122,46 @@ function SentMessage({ id, content, time, isImage, imageSrc, swipedMessageId, sw
   );
 }
 
-// Received Message Component with Swipe
+// Received Message Component with Swipe (FIXED: Less sensitive)
 function ReceivedMessage({ id, content, time, isImage, imageSrc, swipedMessageId, swipeOffset, onSwipe, onResetSwipe, onImageClick }) {
   const [touchStartX, setTouchStartX] = useState(0);
+  const [touchStartY, setTouchStartY] = useState(0);
   const [currentOffset, setCurrentOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
 
   const handleTouchStart = (e) => {
-    setTouchStartX(e.touches[0].clientX);
+    const touch = e.touches[0];
+    setTouchStartX(touch.clientX);
+    setTouchStartY(touch.clientY);
     setIsDragging(true);
     onResetSwipe();
   };
 
   const handleTouchMove = (e) => {
     if (!isDragging) return;
-    const touchX = e.touches[0].clientX;
-    const offset = touchX - touchStartX;
-    if (offset > 0 && offset <= 80) {
-      setCurrentOffset(offset);
+
+    const touch = e.touches[0];
+    const diffX = touch.clientX - touchStartX;
+    const diffY = Math.abs(touch.clientY - touchStartY);
+
+    if (diffY > Math.abs(diffX) && diffY > 10) {
+      setIsDragging(false);
+      return;
+    }
+
+    if (diffX > 15 && diffX <= 80) {
+      setCurrentOffset(diffX);
+      e.preventDefault();
     }
   };
 
   const handleTouchEnd = () => {
+    if (isDragging && currentOffset > 50) {
+      onSwipe(id, touchStartX, touchStartX + currentOffset);
+    }
     setIsDragging(false);
     setTimeout(() => {
       setCurrentOffset(0);
-      onResetSwipe();
     }, 200);
   };
 
@@ -147,7 +171,7 @@ function ReceivedMessage({ id, content, time, isImage, imageSrc, swipedMessageId
   return (
     <div 
       className="flex justify-start mb-2 relative"
-      style={{ animation: 'slideIn 0.3s ease-out', touchAction: 'pan-y' }}
+      style={{ animation: 'slideIn 0.3s ease-out' }}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -171,23 +195,17 @@ function ReceivedMessage({ id, content, time, isImage, imageSrc, swipedMessageId
           transform: `translateX(${displayOffset}px)`,
           transition: isDragging ? 'none' : 'transform 0.3s ease-out',
           maxWidth: isImage ? 'fit-content' : '75%',
-          padding: isImage ? '8px 6px 6px 6px' : '6px 8px 4px 8px', // Reduced for text only
+          padding: isImage ? '8px 6px 6px 6px' : '6px 8px 4px 8px',
           zIndex: 1
         }}
       >
         <div className="absolute bg-white" style={{ 
-          left: '-8px', 
-          top: '0', 
-          width: '20px', 
-          height: '20px',
+          left: '-8px', top: '0', width: '20px', height: '20px',
           borderRadius: '0 0 20px 0',
           clipPath: 'polygon(0 0, 100% 0, 100% 100%)'
         }}></div>
         <div className="absolute bg-white" style={{ 
-          left: '-8px', 
-          bottom: '0', 
-          width: '20px', 
-          height: '20px',
+          left: '-8px', bottom: '0', width: '20px', height: '20px',
           borderRadius: '0 20px 0 0',
           clipPath: 'polygon(0 100%, 100% 100%, 100% 0)'
         }}></div>
@@ -286,28 +304,20 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
     
     if (isVerticalSwipe) {
       const verticalDistance = touchEndY - touchStartY;
-      
       if (verticalDistance > minVerticalSwipeDistance) {
         onClose();
       } else {
         setTranslateY(0);
       }
-      
       setIsVerticalSwipe(false);
     } else {
       setTranslateX(0);
-      
       if (!touchStart || !touchEnd) return;
-      
       const distance = touchStart - touchEnd;
       const isLeftSwipe = distance > minSwipeDistance;
       const isRightSwipe = distance < -minSwipeDistance;
-
-      if (isLeftSwipe) {
-        nextImage();
-      } else if (isRightSwipe) {
-        prevImage();
-      }
+      if (isLeftSwipe) nextImage();
+      else if (isRightSwipe) prevImage();
     }
   };
 
@@ -333,10 +343,7 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
         }}
       >
         <div className="flex items-center gap-3">
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-800 rounded-full transition-colors"
-          >
+          <button onClick={onClose} className="p-2 hover:bg-gray-800 rounded-full transition-colors">
             <Icons.Close />
           </button>
           <div>
@@ -355,10 +362,7 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
 
           {showMenu && (
             <>
-              <div 
-                className="fixed inset-0 z-[110]" 
-                onClick={() => setShowMenu(false)}
-              ></div>
+              <div className="fixed inset-0 z-[110]" onClick={() => setShowMenu(false)}></div>
               <div 
                 className="absolute right-0 top-full mt-2 w-48 rounded-lg overflow-hidden z-[120]"
                 style={{ backgroundColor: '#1a1a1a', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)' }}
@@ -437,7 +441,7 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
   );
 }
 
-// Chat Component – "May 30" container & bubble increased slightly
+// Chat Component – with larger date bubble
 function Chat({ conversation, onClose }) {
   const [isClosing, setIsClosing] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -559,15 +563,15 @@ function Chat({ conversation, onClose }) {
         backgroundColor: 'transparent'
       }}>
         <div className="max-w-3xl mx-auto px-5 py-5">
-          {/* INCREASED DATE BUBBLE & CONTAINER */}
-          <div className="text-center my-4"> {/* my-3 → my-4 (increased container margin) */}
+          {/* LARGER DATE BUBBLE */}
+          <div className="text-center my-4">
             <span 
-              className="inline-block px-4 rounded-full text-xs font-medium" /* px-3 → px-4 */
+              className="inline-block px-4 rounded-full text-xs font-medium"
               style={{ 
                 backgroundColor: '#d9d9d9', 
                 color: '#666',
-                paddingTop: '8px',     /* 6px → 8px */
-                paddingBottom: '8px',  /* 6px → 8px */
+                paddingTop: '8px',
+                paddingBottom: '8px',
                 lineHeight: '1.4'
               }}
             >
