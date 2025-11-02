@@ -1,93 +1,79 @@
 const { useState } = React;
 
-// Define constants for swipe behavior
-const SWIPE_THRESHOLD = 30; // New threshold for registering a swipe (previously implied by opacity: 30)
-const MAX_SWIPE_OFFSET = 80; // The fixed distance the message swipes to reveal the icon
-const BOUNCE_BACK_DURATION = 200; // Duration for the visual bounce-back transition
+// --- Helper Functions and Constants ---
+const MAX_SWIPE_OFFSET = 80;
+const REPLY_THRESHOLD = 40;
+const MIN_SWIPE_DISTANCE = 15; // To reduce accidental swipe on initial scroll
 
 // Sent Message Component with Swipe
 function SentMessage({ id, content, time, isImage, imageSrc, swipedMessageId, swipeOffset, onSwipe, onResetSwipe, onImageClick }) {
   const [touchStartX, setTouchStartX] = useState(0);
-  const [touchStartY, setTouchStartY] = useState(0); // New state for Y-coordinate
   const [currentOffset, setCurrentOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [isHorizontalDrag, setIsHorizontalDrag] = useState(false); // New state to check primary direction
+  const [initialTouchY, setInitialTouchY] = useState(0); // For scroll differentiation
 
   const handleTouchStart = (e) => {
     setTouchStartX(e.touches[0].clientX);
-    setTouchStartY(e.touches[0].clientY); // Record initial Y
+    setInitialTouchY(e.touches[0].clientY);
+    setCurrentOffset(0); // Reset local offset for new drag
     setIsDragging(true);
-    setIsHorizontalDrag(false); // Reset direction check
-    onResetSwipe();
+    onResetSwipe(); // Reset any other message
   };
 
   const handleTouchMove = (e) => {
     if (!isDragging) return;
-    
     const touchX = e.touches[0].clientX;
     const touchY = e.touches[0].clientY;
     const offsetX = touchX - touchStartX;
-    const offsetY = touchY - touchStartY;
+    const offsetY = Math.abs(touchY - initialTouchY);
     
-    // Determine if the movement is primarily horizontal after a slight drag
-    if (!isHorizontalDrag) {
-      const absOffsetX = Math.abs(offsetX);
-      const absOffsetY = Math.abs(offsetY);
-
-      // We only consider it a horizontal drag if the horizontal distance is significantly greater than the vertical,
-      // and it exceeds a small initial distance (e.g., 5px) to allow for minor wobbly starts.
-      if (absOffsetX > 5 || absOffsetY > 5) {
-        if (absOffsetX > absOffsetY * 1.5) { // Check if X distance is 1.5 times greater than Y
-          setIsHorizontalDrag(true);
-        } else {
-          // If the drag is vertical, stop tracking and allow scroll
-          setIsDragging(false);
-          return;
-        }
-      } else {
-          // Not enough movement yet to determine direction
-          return;
-      }
-    }
-
-    // Prevent default scrolling only for confirmed horizontal drag
-    if (isHorizontalDrag) {
-      e.preventDefault(); 
+    // Check if the horizontal movement is significantly greater than vertical
+    // AND has passed the minimum sensitivity threshold
+    if (Math.abs(offsetX) > offsetY * 2 && Math.abs(offsetX) > MIN_SWIPE_DISTANCE) {
+      e.preventDefault(); // Prevent scroll if determined as a horizontal swipe
+      
+      // Only allow swipe from right to left (positive offset for sent message)
       if (offsetX > 0 && offsetX <= MAX_SWIPE_OFFSET) {
         setCurrentOffset(offsetX);
+      } else if (offsetX > MAX_SWIPE_OFFSET) {
+        setCurrentOffset(MAX_SWIPE_OFFSET); // Cap the offset
+      } else {
+        // If swiping in the wrong direction or past 0, still cap it at 0
+        setCurrentOffset(0);
       }
+    } else if (Math.abs(offsetX) <= MIN_SWIPE_DISTANCE && offsetY > Math.abs(offsetX)) {
+      // User is likely scrolling, stop tracking as a drag
+      setIsDragging(false);
+      setCurrentOffset(0);
+      onResetSwipe();
     }
   };
 
   const handleTouchEnd = () => {
-    if (!isDragging || !isHorizontalDrag) {
-      // If we weren't dragging or it was a vertical scroll attempt, just reset state
-      setIsDragging(false);
-      setIsHorizontalDrag(false);
-      return;
-    }
-
     setIsDragging(false);
     
-    // Check if the final swipe distance meets the threshold
-    if (currentOffset >= SWIPE_THRESHOLD) {
-      // Swipe successful, open to MAX_SWIPE_OFFSET
-      setCurrentOffset(MAX_SWIPE_OFFSET);
-      onSwipe(id, touchStartX, touchStartX + MAX_SWIPE_OFFSET); // Notify parent to lock the swipe
+    // Check if the current drag offset is enough to trigger reply
+    if (currentOffset > REPLY_THRESHOLD) {
+      // Trigger reply state on parent component
+      onSwipe(id, touchStartX, touchStartX + currentOffset); 
+      // Keep the component open by setting local offset to max for a smooth transition before parent state takes over
+      setCurrentOffset(MAX_SWIPE_OFFSET); 
     } else {
-      // Swipe insufficient, snap back to 0
-      setTimeout(() => {
-        setCurrentOffset(0);
-        onResetSwipe();
-      }, BOUNCE_BACK_DURATION);
+      // Snap back to 0 immediately for a smooth "fail" bounce
+      setCurrentOffset(0);
+      onResetSwipe();
     }
-    
-    setIsHorizontalDrag(false);
+    // Set a very short timeout to ensure the transform transition applies for the snap-back
+    setTimeout(() => {
+        // This is a safety reset; the parent state should manage the final `displayOffset`
+        // but this ensures the local state doesn't hold an incorrect value.
+        setCurrentOffset(0);
+    }, 50); 
   };
 
   const isThisMessageSwiped = swipedMessageId === id;
-  // If dragging, use currentOffset. If swiped, lock to MAX_SWIPE_OFFSET. Otherwise, 0.
-  const displayOffset = isDragging && isHorizontalDrag ? currentOffset : (isThisMessageSwiped ? MAX_SWIPE_OFFSET : 0);
+  // Use local offset during drag, or parent's offset if reply is active, otherwise 0
+  const displayOffset = isDragging ? currentOffset : (isThisMessageSwiped ? MAX_SWIPE_OFFSET : 0);
 
   return (
     <div 
@@ -100,7 +86,7 @@ function SentMessage({ id, content, time, isImage, imageSrc, swipedMessageId, sw
       <div 
         className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full transition-opacity duration-200"
         style={{ 
-          opacity: displayOffset > SWIPE_THRESHOLD ? 1 : 0, // Icon visible if offset > threshold
+          opacity: displayOffset > REPLY_THRESHOLD ? 1 : 0, // Reply icon appears at threshold
           zIndex: 0,
           marginLeft: '16px'
         }}
@@ -122,7 +108,7 @@ function SentMessage({ id, content, time, isImage, imageSrc, swipedMessageId, sw
           zIndex: 1
         }}
       >
-        {/* ... (rest of SentMessage JSX is unchanged) ... */}
+        {/* ... (Existing Message Styling Divs) ... */}
         <div className="absolute" style={{ 
           backgroundColor: '#d9fdd3',
           right: '-8px', 
@@ -141,7 +127,8 @@ function SentMessage({ id, content, time, isImage, imageSrc, swipedMessageId, sw
           borderRadius: '20px 0 0 0',
           clipPath: 'polygon(0 0, 100% 100%, 0 100%)'
         }}></div>
-
+        
+        {/* ... (Existing Content Rendering) ... */}
         {isImage ? (
           <>
             <img 
@@ -170,86 +157,69 @@ function SentMessage({ id, content, time, isImage, imageSrc, swipedMessageId, sw
   );
 }
 
-// Received Message Component with Swipe
+// Received Message Component with Swipe (Same logic applied)
 function ReceivedMessage({ id, content, time, isImage, imageSrc, swipedMessageId, swipeOffset, onSwipe, onResetSwipe, onImageClick }) {
   const [touchStartX, setTouchStartX] = useState(0);
-  const [touchStartY, setTouchStartY] = useState(0); // New state for Y-coordinate
   const [currentOffset, setCurrentOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [isHorizontalDrag, setIsHorizontalDrag] = useState(false); // New state to check primary direction
+  const [initialTouchY, setInitialTouchY] = useState(0); // For scroll differentiation
 
   const handleTouchStart = (e) => {
     setTouchStartX(e.touches[0].clientX);
-    setTouchStartY(e.touches[0].clientY); // Record initial Y
+    setInitialTouchY(e.touches[0].clientY);
+    setCurrentOffset(0); // Reset local offset for new drag
     setIsDragging(true);
-    setIsHorizontalDrag(false); // Reset direction check
-    onResetSwipe();
+    onResetSwipe(); // Reset any other message
   };
 
   const handleTouchMove = (e) => {
     if (!isDragging) return;
-    
     const touchX = e.touches[0].clientX;
     const touchY = e.touches[0].clientY;
     const offsetX = touchX - touchStartX;
-    const offsetY = touchY - touchStartY;
-
-    // Determine if the movement is primarily horizontal after a slight drag
-    if (!isHorizontalDrag) {
-      const absOffsetX = Math.abs(offsetX);
-      const absOffsetY = Math.abs(offsetY);
-
-      if (absOffsetX > 5 || absOffsetY > 5) {
-        if (absOffsetX > absOffsetY * 1.5) { // Check if X distance is 1.5 times greater than Y
-          setIsHorizontalDrag(true);
-        } else {
-          // If the drag is vertical, stop tracking and allow scroll
-          setIsDragging(false);
-          return;
-        }
-      } else {
-          // Not enough movement yet to determine direction
-          return;
-      }
-    }
-
-    // Prevent default scrolling only for confirmed horizontal drag
-    if (isHorizontalDrag) {
-      e.preventDefault(); 
+    const offsetY = Math.abs(touchY - initialTouchY);
+    
+    // Check if the horizontal movement is significantly greater than vertical
+    // AND has passed the minimum sensitivity threshold
+    if (Math.abs(offsetX) > offsetY * 2 && Math.abs(offsetX) > MIN_SWIPE_DISTANCE) {
+      e.preventDefault(); // Prevent scroll if determined as a horizontal swipe
+      
+      // Only allow swipe from left to right (positive offset)
       if (offsetX > 0 && offsetX <= MAX_SWIPE_OFFSET) {
         setCurrentOffset(offsetX);
+      } else if (offsetX > MAX_SWIPE_OFFSET) {
+        setCurrentOffset(MAX_SWIPE_OFFSET); // Cap the offset
+      } else {
+        // If swiping in the wrong direction or past 0, still cap it at 0
+        setCurrentOffset(0);
       }
+    } else if (Math.abs(offsetX) <= MIN_SWIPE_DISTANCE && offsetY > Math.abs(offsetX)) {
+      // User is likely scrolling, stop tracking as a drag
+      setIsDragging(false);
+      setCurrentOffset(0);
+      onResetSwipe();
     }
   };
 
   const handleTouchEnd = () => {
-    if (!isDragging || !isHorizontalDrag) {
-      // If we weren't dragging or it was a vertical scroll attempt, just reset state
-      setIsDragging(false);
-      setIsHorizontalDrag(false);
-      return;
-    }
-
     setIsDragging(false);
     
-    // Check if the final swipe distance meets the threshold
-    if (currentOffset >= SWIPE_THRESHOLD) {
-      // Swipe successful, open to MAX_SWIPE_OFFSET
+    if (currentOffset > REPLY_THRESHOLD) {
+      // Trigger reply state on parent component
+      onSwipe(id, touchStartX, touchStartX + currentOffset); 
       setCurrentOffset(MAX_SWIPE_OFFSET);
-      onSwipe(id, touchStartX, touchStartX + MAX_SWIPE_OFFSET); // Notify parent to lock the swipe
     } else {
-      // Swipe insufficient, snap back to 0
-      setTimeout(() => {
-        setCurrentOffset(0);
-        onResetSwipe();
-      }, BOUNCE_BACK_DURATION);
+      // Snap back to 0 immediately
+      setCurrentOffset(0);
+      onResetSwipe();
     }
-    
-    setIsHorizontalDrag(false);
+    setTimeout(() => {
+        setCurrentOffset(0);
+    }, 50); 
   };
 
   const isThisMessageSwiped = swipedMessageId === id;
-  const displayOffset = isDragging && isHorizontalDrag ? currentOffset : (isThisMessageSwiped ? MAX_SWIPE_OFFSET : 0);
+  const displayOffset = isDragging ? currentOffset : (isThisMessageSwiped ? MAX_SWIPE_OFFSET : 0);
 
   return (
     <div 
@@ -262,7 +232,7 @@ function ReceivedMessage({ id, content, time, isImage, imageSrc, swipedMessageId
       <div 
         className="absolute left-2 top-1/2 -translate-y-1/2 transition-opacity duration-200"
         style={{ 
-          opacity: displayOffset > SWIPE_THRESHOLD ? 1 : 0, // Icon visible if offset > threshold
+          opacity: displayOffset > REPLY_THRESHOLD ? 1 : 0, // Reply icon appears at threshold
           zIndex: 0
         }}
       >
@@ -282,7 +252,7 @@ function ReceivedMessage({ id, content, time, isImage, imageSrc, swipedMessageId
           zIndex: 1
         }}
       >
-        {/* ... (rest of ReceivedMessage JSX is unchanged) ... */}
+        {/* ... (Existing Message Styling Divs) ... */}
         <div className="absolute bg-white" style={{ 
           left: '-8px', 
           top: '0', 
@@ -299,7 +269,8 @@ function ReceivedMessage({ id, content, time, isImage, imageSrc, swipedMessageId
           borderRadius: '0 20px 0 0',
           clipPath: 'polygon(0 100%, 100% 100%, 100% 0)'
         }}></div>
-
+        
+        {/* ... (Existing Content Rendering) ... */}
         {isImage ? (
           <>
             <img 
@@ -323,7 +294,6 @@ function ReceivedMessage({ id, content, time, isImage, imageSrc, swipedMessageId
 }
 
 // Image Viewer Component (Unchanged)
-// ... (ImageViewer code remains the same as provided) ...
 function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
   const [index, setIndex] = useState(currentIndex);
   const [showMenu, setShowMenu] = useState(false);
@@ -546,15 +516,14 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
   );
 }
 
-
-// Chat Component – with updated date bubble padding and simplified handleMessageSwipe
+// Chat Component – with updated handleMessageSwipe
 function Chat({ conversation, onClose }) {
   const [isClosing, setIsClosing] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [swipedMessageId, setSwipedMessageId] = useState(null);
-  const [swipeOffset, setSwipeOffset] = useState(0);
+  const [swipeOffset, setSwipeOffset] = useState(0); // This is now always 80 or 0 for the completed state
 
   const images = [
     {
@@ -571,11 +540,15 @@ function Chat({ conversation, onClose }) {
     }
   ];
 
-  // This function is now simplified as the swipe logic is primarily handled within the message components
-  const handleMessageSwipe = (messageId, touchStartX, touchEndX) => {
-    // Lock the swipe state in the parent (Chat) component to keep the message open
-    setSwipedMessageId(messageId);
-    setSwipeOffset(MAX_SWIPE_OFFSET); // Lock to the max offset
+  // The new handleMessageSwipe is simpler now. It just sets the state to "replied"
+  const handleMessageSwipe = (messageId) => {
+    // Only update if a new message is being swiped or the same one is confirmed
+    if (swipedMessageId !== messageId) {
+      setSwipedMessageId(messageId);
+      setSwipeOffset(MAX_SWIPE_OFFSET); // Sets the message to the fully swiped state
+      // Logic for reply action would go here
+      console.log(`Reply triggered for message: ${messageId}`);
+    }
   };
 
   const resetSwipe = () => {
