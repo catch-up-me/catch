@@ -222,3 +222,4 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
     </div>
   );
 }
+
