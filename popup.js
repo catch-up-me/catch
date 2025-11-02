@@ -111,7 +111,7 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
       }}
     >
       <div 
-        className="flex items-center justify-between px-4 py-3 transition-opacity duration-200"
+        className="flex items-center justify-between px-4 py-3 transition-opacity duration-200 relative z-[150]"
         style={{ 
           backgroundColor: 'rgba(0, 0, 0, 0.9)',
           backdropFilter: 'blur(10px)',
@@ -131,7 +131,7 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
           </div>
         </div>
 
-        <div className="relative">
+        <div className="relative z-[160]">
           <button 
             className="p-2 hover:bg-gray-800 rounded-full transition-colors"
             onClick={() => setShowMenu(!showMenu)}
@@ -142,11 +142,11 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
           {showMenu && (
             <>
               <div 
-                className="fixed inset-0 z-[110]" 
+                className="fixed inset-0 z-[170]" 
                 onClick={() => setShowMenu(false)}
               ></div>
               <div 
-                className="absolute right-0 top-full mt-2 w-48 rounded-lg overflow-hidden z-[120]"
+                className="absolute right-0 top-full mt-2 w-48 rounded-lg overflow-hidden z-[180]"
                 style={{ backgroundColor: '#1a1a1a', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)' }}
               >
                 <button className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-800 transition-colors text-left text-white text-sm">
