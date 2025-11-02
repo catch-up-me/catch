@@ -61,7 +61,7 @@ function SentMessage({ id, content, time, isImage, imageSrc, swipedMessageId, sw
           transform: `translateX(${displayOffset}px)`,
           transition: isDragging ? 'none' : 'transform 0.3s ease-out',
           maxWidth: isImage ? 'fit-content' : '75%',
-          padding: isImage ? '8px 6px 6px 6px' : '6px 8px 4px 8px', // Reduced vertical padding
+          padding: isImage ? '8px 6px 6px 6px' : '6px 8px 4px 8px', // Reduced for text only
           zIndex: 1
         }}
       >
@@ -171,7 +171,7 @@ function ReceivedMessage({ id, content, time, isImage, imageSrc, swipedMessageId
           transform: `translateX(${displayOffset}px)`,
           transition: isDragging ? 'none' : 'transform 0.3s ease-out',
           maxWidth: isImage ? 'fit-content' : '75%',
-          padding: isImage ? '8px 6px 6px 6px' : '6px 8px 4px 8px', // Reduced vertical padding
+          padding: isImage ? '8px 6px 6px 6px' : '6px 8px 4px 8px', // Reduced for text only
           zIndex: 1
         }}
       >
@@ -437,7 +437,7 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
   );
 }
 
-// Chat Component – with updated date bubble padding
+// Chat Component – "May 30" container & bubble increased slightly
 function Chat({ conversation, onClose }) {
   const [isClosing, setIsClosing] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -463,7 +463,6 @@ function Chat({ conversation, onClose }) {
 
   const handleMessageSwipe = (messageId, touchStartX, touchEndX) => {
     const swipeDistance = touchEndX - touchStartX;
-    
     if (swipeDistance > 50) {
       setSwipedMessageId(messageId);
       setSwipeOffset(Math.min(swipeDistance, 80));
@@ -480,9 +479,7 @@ function Chat({ conversation, onClose }) {
 
   const handleClose = () => {
     setIsClosing(true);
-    setTimeout(() => {
-      onClose();
-    }, 500);
+    setTimeout(() => onClose(), 500);
   };
 
   return (
@@ -562,15 +559,16 @@ function Chat({ conversation, onClose }) {
         backgroundColor: 'transparent'
       }}>
         <div className="max-w-3xl mx-auto px-5 py-5">
-          {/* DATE BUBBLE – increased vertical padding */}
-          <div className="text-center my-3">
+          {/* INCREASED DATE BUBBLE & CONTAINER */}
+          <div className="text-center my-4"> {/* my-3 → my-4 (increased container margin) */}
             <span 
-              className="inline-block px-3 rounded-full text-xs font-medium"
+              className="inline-block px-4 rounded-full text-xs font-medium" /* px-3 → px-4 */
               style={{ 
                 backgroundColor: '#d9d9d9', 
                 color: '#666',
-                paddingTop: '6px',
-                paddingBottom: '6px'
+                paddingTop: '8px',     /* 6px → 8px */
+                paddingBottom: '8px',  /* 6px → 8px */
+                lineHeight: '1.4'
               }}
             >
               May 30
