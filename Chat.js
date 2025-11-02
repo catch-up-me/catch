@@ -358,11 +358,11 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
           {showMenu && (
             <>
               <div 
-                className="fixed inset-0 z-40" 
+                className="fixed inset-0 z-[110]" 
                 onClick={() => setShowMenu(false)}
               ></div>
               <div 
-                className="absolute right-0 top-full mt-2 w-48 rounded-lg overflow-hidden z-50"
+                className="absolute right-0 top-full mt-2 w-48 rounded-lg overflow-hidden z-[120]"
                 style={{ backgroundColor: '#1a1a1a', boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)' }}
               >
                 <button className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-800 transition-colors text-left text-white text-sm">
