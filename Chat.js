@@ -1,5 +1,3 @@
-Chat.js:
-
 const { useState } = React;
 
 // Chat Component – refactored with separated components
