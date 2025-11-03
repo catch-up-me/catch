@@ -1,7 +1,6 @@
+Create an artifact called Message.js that will be at the (float) bottom for typing message (connecting to Chat.js) Do not add any emoji to the emoji picker leave it blank as it is;
 
-import { useState, useEffect, useRef } from 'react';
-
-function Messages() {
+export default function ChatInterface() {
   const [message, setMessage] = useState('');
   const [emojiOpen, setEmojiOpen] = useState(false);
   const msgRef = useRef(null);
@@ -22,6 +21,7 @@ function Messages() {
   };
 
   useEffect(() => {
+    // Keep placeholder class in sync
     if (msgRef.current) {
       if (message.trim() === '') {
         msgRef.current.classList.add('empty');
@@ -36,6 +36,16 @@ function Messages() {
       <style>{`
         :root { box-sizing: border-box; }
         *, *::before, *::after { box-sizing: inherit; }
+
+        body {
+          background: #0d1418;
+          margin: 0;
+          font-family: Arial, sans-serif;
+          height: 100vh;
+          display: flex;
+          align-items: flex-end;
+          justify-content: flex-start;
+        }
 
         .chat-container {
           position: fixed;
