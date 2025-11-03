@@ -58,7 +58,7 @@ function Chat({ conversation, onClose }) {
         backgroundSize: 'cover',
         backgroundColor: 'transparent'
       }}>
-        <div className="max-w-3xl mx-auto px-5 py-5">
+        <div className="max-w-3xl mx-auto px-5 py-5" style={{ paddingBottom: '100px' }}>
           {/* DATE BUBBLE */}
           <div className="text-center my-3">
             <span 
