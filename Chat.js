@@ -136,6 +136,9 @@ function Chat({ conversation, onClose }) {
         </div>
       </main>
 
+      {/* Messages Component - Floating Input */}
+      <Messages />
+
       {selectedImage && <ImageViewer 
         images={images}
         currentIndex={currentImageIndex}
