@@ -277,7 +277,7 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
         <div 
           className="absolute inset-0 flex"
           style={{
-            transform: scale === 1 ? `translateX(calc(-${index * 100}% + ${isSwipingHorizontal.current ? horizontalSwipeOffset.current : 0}px))` : 'none',
+            transform: scale === 1 ? `translateX(calc(-${index * 100}% + ${isSwipingHorizontal.current ? horizontalSwipeOffset.current : 0}px))` : `translateX(-${index * 100}%)`,
             transition: isSwipingHorizontal.current || isPinching.current || isPanning.current ? 'none' : 'transform 0.3s ease-out'
           }}
         >
@@ -287,7 +287,9 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
               className="flex-shrink-0 w-full h-full flex items-center justify-center"
               style={{ 
                 minWidth: '100%',
-                display: scale > 1 ? (idx === index ? 'flex' : 'none') : 'flex'
+                opacity: scale > 1 ? (idx === index ? 1 : 0) : 1,
+                pointerEvents: scale > 1 ? (idx === index ? 'auto' : 'none') : 'auto',
+                transition: 'opacity 0.2s ease-out'
               }}
             >
               <img 
@@ -299,7 +301,7 @@ function ImageViewer({ images, currentIndex, onClose, onIndexChange }) {
                   width: '100%',
                   height: '100%',
                   objectFit: 'contain',
-                  transform: `scale(${scale}) translate(${posX / scale}px, ${posY / scale}px)`,
+                  transform: idx === index ? `scale(${scale}) translate(${posX / scale}px, ${posY / scale}px)` : 'none',
                   transition: isPinching.current || isPanning.current ? 'none' : 'transform 0.2s ease-out',
                   transformOrigin: 'center center'
                 }}
