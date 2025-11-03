@@ -37,7 +37,7 @@ function Messages() {
         *, *::before, *::after { box-sizing: inherit; }
 
         .chat-container {
-          position: fixed;
+          position: absolute;
           bottom: 14px;
           left: 0;
           width: 100%;
@@ -86,7 +86,7 @@ function Messages() {
           bottom: 0;
           width: 6px;
           height: 19px;
-          background: #ffffff;
+          background: #0d1418;
           border-bottom-left-radius: 10px;
         }
 
@@ -168,7 +168,7 @@ function Messages() {
         }
 
         .emoji-picker {
-          position: fixed;
+          position: absolute;
           bottom: 0;
           left: 0;
           width: 100%;
