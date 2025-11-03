@@ -1,4 +1,4 @@
-Create an artifact called Message.js that will be at the (float) bottom for typing message (connecting to Chat.js);
+Create an artifact called Message.js that will be at the (float) bottom for typing message (connecting to Chat.js) Do not add any emoji to the emoji picker leave it blank as it is;
 
 export default function ChatInterface() {
   const [message, setMessage] = useState('');
