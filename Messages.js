@@ -78,6 +78,17 @@ function Messages() {
           background: #fff;
           border-bottom-left-radius: 15px 14px;
         }
+        
+        .content-div::after {
+          content: "";
+          position: absolute;
+          right: -6px;
+          bottom: 0;
+          width: 6px;
+          height: 19px;
+          background: #ffffff;
+          border-bottom-left-radius: 10px;
+        }
 
         .emoji-btn,
         .attach-btn {
