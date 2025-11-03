@@ -1,3 +1,5 @@
+Chat.js:
+
 const { useState } = React;
 
 // Chat Component – refactored with separated components
@@ -135,9 +137,6 @@ function Chat({ conversation, onClose }) {
           />
         </div>
       </main>
-
-      {/* Messages Component - Floating Input */}
-      <Messages />
 
       {selectedImage && <ImageViewer 
         images={images}
