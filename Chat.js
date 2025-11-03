@@ -51,14 +51,14 @@ function Chat({ conversation, onClose }) {
     <div className={`fixed inset-0 bg-white z-50 flex flex-col transition-transform duration-500 ease-in-out ${isClosing ? 'translate-x-full' : 'translate-x-0'}`}>
       <Header conversation={conversation} onClose={handleClose} />
 
-      <main className="flex-1 bg-white overflow-y-auto" style={{ 
+      <main className="flex-1 bg-white overflow-y-auto pb-20" style={{ 
         backgroundImage: 'url("https://i.ibb.co/HfvQJj50/Screenshot-20250730-222749.jpg")',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center top',
         backgroundSize: 'cover',
         backgroundColor: 'transparent'
       }}>
-        <div className="max-w-3xl mx-auto px-5 py-5" style={{ paddingBottom: '100px' }}>
+        <div className="max-w-3xl mx-auto px-5 py-5">
           {/* DATE BUBBLE */}
           <div className="text-center my-3">
             <span 
