@@ -1,4 +1,5 @@
-const { useState, useEffect, useRef } = React;
+
+import { useState, useEffect, useRef } from 'react';
 
 function Messages() {
   const [message, setMessage] = useState('');
@@ -37,7 +38,7 @@ function Messages() {
         *, *::before, *::after { box-sizing: inherit; }
 
         .chat-container {
-          position: absolute;
+          position: fixed;
           bottom: 14px;
           left: 0;
           width: 100%;
@@ -168,7 +169,7 @@ function Messages() {
         }
 
         .emoji-picker {
-          position: absolute;
+          position: fixed;
           bottom: 0;
           left: 0;
           width: 100%;
