@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messaging Interface</title>
+
+  <!-- ✅ Font Awesome CDN -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+  />
+
+  <style>
+    body {
+      font-family: "Segoe UI", Roboto, sans-serif;
+      background: #e5ddd5;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .messages-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 70px; /* space for input bar */
+    }
+
+    .message {
+      position: relative;
+      max-width: 75%;
+      padding: 10px 14px;
+      font-size: 15px;
+      line-height: 1.4;
+      border-radius: 8px;
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+      word-wrap: break-word;
+      display: inline-block;
+    }
+
+    .message-content {
+      display: inline;
+      margin-right: 8px;
+    }
+
+    .message.received {
+      background: #ffffff;
+      align-self: flex-start;
+      border-top-left-radius: 0;
+    }
+
+    .message.received::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: -8px;
+      width: 12px;
+      height: 18px;
+      background: white;
+      clip-path: path("M 12 0 Q 0 0, 0 18 L 12 18 Z");
+    }
+
+    .message.sent {
+      background: #dcf8c6;
+      align-self: flex-end;
+      border-top-right-radius: 0;
+    }
+
+    .message.sent::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      right: -8px;
+      width: 12px;
+      height: 18px;
+      background: #dcf8c6;
+      clip-path: path("M 0 0 Q 12 0, 12 18 L 0 18 Z");
+    }
+
+    .timestamp {
+      display: inline-block;
+      font-size: 11px;
+      color: #777;
+      white-space: nowrap;
+      vertical-align: bottom;
+      margin-left: 6px;
+      line-height: 1.4;
+    }
+
+    /* ✅ Typing Container */
+    .typing-container {
+      position: fixed;
+      bottom: 10px;
+      left: 0;
+      right: 85px;
+      background: white;
+      border-radius: 10px;
+      padding: 8px 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      min-height: 50px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 10px;
+      z-index: 10;
+      transition: all 0.2s ease;
+    }
+
+    .typing-container::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: -10px;
+      width: 20px;
+      height: 22px;
+      background: white;
+      clip-path: path('M 0 0 Q 20 0, 20 22 L 0 22 Z');
+    }
+
+    .typing-area {
+      flex: 1;
+      outline: none;
+      border: none;
+      font-size: 16px;
+      font-family: inherit;
+      min-height: 28px;
+      max-height: 100px;
+      overflow-y: auto;
+      line-height: 1.4;
+      padding-top: 2px;
+    }
+
+    .typing-area:empty:before {
+      content: 'Type a message...';
+      color: #999;
+    }
+
+    /* ✅ Font Awesome Icons (Gray) */
+    .typing-container i {
+      font-size: 20px;
+      color: #919191;
+      cursor: pointer;
+      transition: color 0.2s ease;
+      flex-shrink: 0;
+      margin-bottom: 4px;
+    }
+
+    .typing-container i:hover {
+      color: #6f6f6f;
+    }
+
+    /* ✅ Mic / Send Button */
+    .mic-wrapper {
+      position: fixed;
+      right: 16px;
+      bottom: 6px;
+      width: 54px;
+      height: 54px;
+      background: #749cbf;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      z-index: 20;
+    }
+
+    .mic-wrapper:hover {
+      transform: scale(1.05);
+      background: #5b86a5;
+    }
+
+    .mic-wrapper svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    @media (max-width: 600px) {
+      .mic-wrapper {
+        right: 12px;
+        bottom: 8px;
+        width: 50px;
+        height: 50px;
+      }
+
+      .mic-wrapper svg {
+        width: 22px;
+        height: 22px;
+      }
+
+      .typing-container {
+        right: 76px;
+        min-height: 33px;
+        padding: 8px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="messages-container" id="messages">
+    <div class="message received">
+      <span class="message-content">Am into logistics and delivery...<br><br>
+      How about you Mykee...</span>
+      <span class="timestamp">09:39 AM</span>
+    </div>
+
+    <div class="message sent">
+      <span class="message-content">That's cool! I work in tech.</span>
+      <span class="timestamp">09:40 AM</span>
+    </div>
+  </div>
+
+  <!-- ✅ Typing Container -->
+  <div class="typing-container">
+    <i class="fa-regular fa-face-smile"></i>
+    <div class="typing-area" contenteditable="true" id="typingArea"></div>
+    <i class="fa-solid fa-paperclip"></i>
+  </div>
+
+  <!-- ✅ Mic / Send Button -->
+  <div class="mic-wrapper" id="micButton">
+    <svg id="micIcon" viewBox="0 0 24 24" fill="none">
+      <path
+        d="M7.25 7C7.25 4.37665 9.37665 2.25 12 2.25C14.6234 2.25 16.75 4.37665 16.75 7V11C16.75 13.6234 14.6234 15.75 12 15.75C9.37665 15.75 7.25 13.6234 7.25 11V7Z"
+        fill="#ffffff"></path>
+      <path
+        d="M5.75 10C5.75 9.58579 5.41421 9.25 5 9.25C4.58579 9.25 4.25 9.58579 4.25 10V11C4.25 15.0272 7.3217 18.3369 11.25 18.7142V21C11.25 21.4142 11.5858 21.75 12 21.75C12.4142 21.75 12.75 21.4142 12.75 21V18.7142C16.6783 18.3369 19.75 15.0272 19.75 11V10C19.75 9.58579 19.4142 9.25 19 9.25C18.58579 9.25 18.25 9.58579 18.25 10V11C18.25 14.4518 15.4518 17.25 12 17.25C8.54822 17.25 5.75 14.4518 5.75 11V10Z"
+        fill="#ffffff"></path>
+    </svg>
+
+    <svg id="sendIcon" viewBox="0 -0.5 21 21" fill="none" xmlns="http://www.w3.org/2000/svg"
+      stroke="#000000" stroke-width="0.00021" style="display: none;">
+      <path fill-rule="evenodd" clip-rule="evenodd"
+        d="M2.61258 9L0.05132 1.31623C-0.22718 0.48074 0.63218 -0.28074 1.42809 0.09626L20.4281 9.0963C21.1906 9.4575 21.1906 10.5425 20.4281 10.9037L1.42809 19.9037C0.63218 20.2807 -0.22718 19.5193 0.05132 18.6838L2.61258 11H8.9873C9.5396 11 9.9873 10.5523 9.9873 10C9.9873 9.4477 9.5396 9 8.9873 9H2.61258z"
+        fill="#ffffff"></path>
+    </svg>
+  </div>
+
+  <script>
+    const typingArea = document.getElementById('typingArea');
+    const micIcon = document.getElementById('micIcon');
+    const sendIcon = document.getElementById('sendIcon');
+    const micButton = document.getElementById('micButton');
+    const messages = document.getElementById('messages');
+
+    // Toggle mic ↔ send icon
+    typingArea.addEventListener('input', () => {
+      const hasText = typingArea.textContent.trim().length > 0;
+      micIcon.style.display = hasText ? 'none' : 'block';
+      sendIcon.style.display = hasText ? 'block' : 'none';
+    });
+
+    // Send message on click
+    micButton.addEventListener('click', () => {
+      const messageText = typingArea.textContent.trim();
+      if (messageText.length === 0) return;
+
+      const msg = document.createElement('div');
+      msg.className = 'message sent';
+      
+      const content = document.createElement('span');
+      content.className = 'message-content';
+      content.textContent = messageText;
+      
+      const timestamp = document.createElement('span');
+      timestamp.className = 'timestamp';
+      timestamp.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      
+      msg.appendChild(content);
+      msg.appendChild(timestamp);
+      messages.appendChild(msg);
+
+      typingArea.textContent = '';
+      micIcon.style.display = 'block';
+      sendIcon.style.display = 'none';
+
+      messages.scrollTop = messages.scrollHeight;
+    });
+  </script>
+</body>
+</html>
